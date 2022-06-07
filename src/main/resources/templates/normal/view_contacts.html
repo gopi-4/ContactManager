@@ -133,7 +133,7 @@
 						let text = `<div class='list-group'>`;
 					
 						Object.keys(data).forEach((k) => {
-							text+= `<a href='/user/contact/${data[k].cid}' class='list-group-item list-group-action'> ${data[k].name} </a>`;
+							text+= `<a href='/admin/user/'${data[k].Id} class='list-group-item list-group-action'> ${data[k].name} </a>`;
 						});
 						text+='</div>';
 						$(".search-result").html(text);
