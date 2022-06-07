@@ -64,18 +64,18 @@ public class UserController {
 
 	long duration = 0;
 
-	  @ModelAttribute private void addCommonData(Model model, Principal principal, HttpSession session){
+	  @ModelAttribute private void addCommonData(Model model, Principal principal){
 	  
-		  model.addAttribute("user", (User)session.getAttribute("user")); 
+		  User user = this.userRepository.getUserByEmail(principal.getName());
+		  model.addAttribute("user", user); 
 	  }
 
 	@RequestMapping("/index")
-	private String index(Model model, Principal principal, HttpSession session) {
+	private String index(Model model, Principal principal) {
 
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		user.setStatus(true);
 		this.userRepository.save(user);
-		session.setAttribute("user", user);
 		model.addAttribute("title", "User Dashboard");
 		duration = System.currentTimeMillis();
 		return "normal/index";
@@ -95,9 +95,8 @@ public class UserController {
 
 		try {
 
-//			String emailString = principal.getName();
-//			User user = userRepository.getUserByEmail(emailString);
-			User user = (User) session.getAttribute("user");
+			String emailString = principal.getName();
+			User user = userRepository.getUserByEmail(emailString);
 
 			if (file.isEmpty()) {
 				contact.setImage("default.jpg");
@@ -122,7 +121,6 @@ public class UserController {
 
 //			this.userRepository.save(user);
 			this.contactRepository.save(contact);
-//			session.setAttribute("user", user);
 
 			session.setAttribute("message", new Message("Contact Added Successfully..", "success"));
 
@@ -144,14 +142,12 @@ public class UserController {
 	}
 
 	@GetMapping("/view_contacts/{page}")
-	private String viewContacts(@PathVariable("page") Integer page, Model model, Principal principal,
-			HttpSession session) {
+	private String viewContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
 
 		try {
 
-//			String userEmail = principal.getName();
-//			User user = this.userRepository.getUserByEmail(userEmail);
-			User user = (User) session.getAttribute("user");
+			String userEmail = principal.getName();
+			User user = this.userRepository.getUserByEmail(userEmail);
 			Pageable pageable = PageRequest.of(page, 5);
 			Page<Contact> contacts = this.contactRepository.findContactsByUser(user.getId(), pageable);
 			List<User> users = this.userRepository.findAll();
@@ -187,15 +183,12 @@ public class UserController {
 	}
 
 	@GetMapping("/contact/{Cid}")
-	public String showContactDetails(@PathVariable("Cid") Integer Cid, Model model, Principal principal,
-			HttpSession session) {
+	public String showContactDetails(@PathVariable("Cid") Integer Cid, Model model, Principal principal) {
 
 		Optional<Contact> optional = this.contactRepository.findById(Cid);
 		Contact contact = optional.get();
-//		String userEmail = principal.getName();
-//		User user = this.userRepository.getUserByEmail(userEmail);
-
-		User user = (User) session.getAttribute("user");
+		String userEmail = principal.getName();
+		User user = this.userRepository.getUserByEmail(userEmail);
 
 		if (user.getId() == contact.getUser().getId()) {
 
@@ -214,9 +207,8 @@ public class UserController {
 			HttpSession session) {
 
 		try {
-//			String userEmail = principal.getName();
-//			User user = this.userRepository.getUserByEmail(userEmail);
-			User user = (User) session.getAttribute("user");
+			String userEmail = principal.getName();
+			User user = this.userRepository.getUserByEmail(userEmail);
 
 			Contact contact = this.contactRepository.findById(Cid).get();
 
@@ -224,7 +216,6 @@ public class UserController {
 
 				user.getContacts().remove(contact);
 				this.userRepository.save(user);
-				session.setAttribute("user", user);
 
 				if (!contact.getImage().equals("default.jpg")) {
 					File fileToDelete = new ClassPathResource("static" + File.separator + "images").getFile();
@@ -248,9 +239,8 @@ public class UserController {
 	public String updateContact(@PathVariable("Cid") Integer Cid, Model model, Principal principal,
 			HttpSession session) {
 
-//		String userEmail = principal.getName();
-//		User user = this.userRepository.getUserByEmail(userEmail);
-		User user = (User) session.getAttribute("user");
+		String userEmail = principal.getName();
+		User user = this.userRepository.getUserByEmail(userEmail);
 		Contact contact = this.contactRepository.findById(Cid).get();
 
 		if (user.getId() == contact.getUser().getId()) {
@@ -286,8 +276,7 @@ public class UserController {
 			} else {
 				contact.setImage(oldContact.getImage());
 			}
-//			User user = this.userRepository.getUserByEmail(principal.getName());
-			User user = (User) session.getAttribute("user");
+			User user = this.userRepository.getUserByEmail(principal.getName());
 			contact.setUser(user);
 
 			User tempUser = this.userRepository.getUserByEmail(contact.getEmail());
@@ -308,7 +297,7 @@ public class UserController {
 	}
 
 	@GetMapping("/profile")
-	public String profile(Model model, HttpSession session) {
+	public String profile(Model model) {
 		model.addAttribute("title", "My Profile");
 		return "normal/profile";
 	}
@@ -346,7 +335,6 @@ public class UserController {
 				}
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				this.userRepository.save(user);
-				session.setAttribute("user", user);
 				session.setAttribute("message", new Message("User updated successfully...", "success"));
 			} else {
 				System.out.println("Please Accepts term's and condition's.");
@@ -361,17 +349,15 @@ public class UserController {
 	}
 
 	@GetMapping("/signout")
-	public String logout(Principal principal, HttpSession session) {
+	public String logout(Principal principal) {
 
-//		User user = userRepository.getUserByEmail(principal.getName());
-		User user = (User) session.getAttribute("user");
+		User user = userRepository.getUserByEmail(principal.getName());
 		user.setStatus(false);
 		user.setCoins(user.getCoins() + (System.currentTimeMillis() - duration) / 360000000);
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDateTime now = LocalDateTime.now();
 		user.setDate(dtf.format(now));
 		this.userRepository.save(user);
-		session.setAttribute("user", user);
 		return "redirect:/signout";
 	}
 

@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,14 +37,14 @@ public class ChatController {
 	private MessageRepository messageRepository;
 	
 	@ModelAttribute
-	private void addCommonData(Model model, Principal principal, HttpSession session) {
+	private void addCommonData(Model model, Principal principal) {
 
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		model.addAttribute("user", user);
 	}
 	
 	@GetMapping("/{contactId}")
-	public String chat(@PathVariable("contactId") int contactId, Model model, HttpSession session) {
+	public String chat(@PathVariable("contactId") int contactId, Model model) {
 		
 		Contact contact = this.contactRepository.getById(contactId);
 		if(contact==null || contact.getUnique_id()==0) return "redirect:/user/view_contacts/0";
@@ -56,9 +54,9 @@ public class ChatController {
 	}
 	
 	@PostMapping("/getChat")
-	public ResponseEntity<Optional<String>> getChat(@RequestParam("incoming_id") Integer incoming_id, Principal principal, HttpSession session){
+	public ResponseEntity<Optional<String>> getChat(@RequestParam("incoming_id") Integer incoming_id, Principal principal){
 		
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		int outgoing_id = this.userRepository.getUserByEmail(user.getEmail()).getId();
 		StringBuffer sBuffer = new StringBuffer();
 		
@@ -79,7 +77,7 @@ public class ChatController {
 	}
 	
 	@PostMapping("/insertChat")
-	public ResponseEntity<Messages> insertChat(@RequestParam("outgoing_id") Integer outgoing_id, @RequestParam("incoming_id") Integer incoming_id, @RequestParam("message") String message, Principal principal){
+	public ResponseEntity<Messages> insertChat(@RequestParam("outgoing_id") Integer outgoing_id, @RequestParam("incoming_id") Integer incoming_id, @RequestParam("message") String message){
 		
 		Messages messages = null;
 		if(message.isEmpty()) {
@@ -90,9 +88,9 @@ public class ChatController {
 	}
 	
 	@GetMapping("/admin/{userId}")
-	public String adminChat(@PathVariable("userId") int userId, Model model, HttpSession session) {
+	public String adminChat(@PathVariable("userId") int userId, Model model, Principal principal) {
 		
-		User user = this.userRepository.getById(userId);
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		if(user==null) return "redirect:/admin/viewUsers/0";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.getStatus());
@@ -100,9 +98,9 @@ public class ChatController {
 	}
 	
 	@PostMapping("/admin/getChat")
-	public ResponseEntity<Optional<String>> admingetChat(@RequestParam("incoming_id") Integer incoming_id, Principal principal, HttpSession session){
+	public ResponseEntity<Optional<String>> admingetChat(@RequestParam("incoming_id") Integer incoming_id, Principal principal){
 		
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		int outgoing_id = user.getId();
 		StringBuffer sBuffer = new StringBuffer();
 		
@@ -123,7 +121,7 @@ public class ChatController {
 	}
 	
 	@PostMapping("/admin/insertChat")
-	public ResponseEntity<Messages> admininsertChat(@RequestParam("outgoing_id") Integer outgoing_id, @RequestParam("incoming_id") Integer incoming_id, @RequestParam("message") String message, Principal principal){
+	public ResponseEntity<Messages> admininsertChat(@RequestParam("outgoing_id") Integer outgoing_id, @RequestParam("incoming_id") Integer incoming_id, @RequestParam("message") String message){
 		
 		Messages messages = null;
 		if(message.isEmpty()) {
@@ -134,7 +132,7 @@ public class ChatController {
 	}
 	
 	@GetMapping("/chatAdmin")
-	public String chatAdmin(Model model, HttpSession session) {
+	public String chatAdmin(Model model) {
 		
 		String ADMIN_EMAIL = System.getenv("ADMIN_EMAIL");
 		User user = this.userRepository.getUserByEmail(ADMIN_EMAIL);

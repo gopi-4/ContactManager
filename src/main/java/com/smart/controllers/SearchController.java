@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +24,9 @@ public class SearchController {
 	private ContactRepository contactRepository; 
 	
 	@GetMapping("/search/{query}")
-	public ResponseEntity<?> search(@PathVariable("query") String query, Principal principal, HttpSession session){
+	public ResponseEntity<?> search(@PathVariable("query") String query, Principal principal){
 	
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		List<Contact> contacts = this.contactRepository.findByNameContainingAndUser(query, user);
 		
 		return ResponseEntity.ok(contacts);

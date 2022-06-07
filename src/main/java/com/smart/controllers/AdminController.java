@@ -33,21 +33,18 @@ public class AdminController {
 	private long duration;
 	
 	@ModelAttribute
-	private void addCommonData(Model model, Principal principal, HttpSession session) {
+	private void addCommonData(Model model, Principal principal) {
 
-//		User admin = userRepository.getUserByEmail(principal.getName());
-		User admin = (User) session.getAttribute("user");
+		User admin = userRepository.getUserByEmail(principal.getName());
 		model.addAttribute("admin", admin);
 	}
 	
 	@RequestMapping("/index")
-	private String index(Model model, Principal principal, HttpSession session) {
+	private String index(Model model, Principal principal) {
 		
-//		User user = userRepository.getUserByEmail(principal.getName());
-		User user = (User) session.getAttribute("user");
+		User user = userRepository.getUserByEmail(principal.getName());
 		user.setStatus(true);
 		this.userRepository.save(user);
-		session.setAttribute("admin", user);
 		model.addAttribute("title", "Admin Dashboard");
 		duration = System.currentTimeMillis();
 		return "admin/index";
@@ -99,7 +96,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/user/{Id}")
-	public String showUserDetails(@PathVariable("Id") Integer Id, Model model, Principal principal) {
+	public String showUserDetails(@PathVariable("Id") Integer Id, Model model) {
 
 		Optional<User> optional = this.userRepository.findById(Id);
 		User user = optional.get();
@@ -125,16 +122,15 @@ public class AdminController {
 	}
 	
 	@GetMapping("/signout")
-	public String logout(Principal principal, HttpSession session) {
+	public String logout(Principal principal) {
 		
-		User user = (User) session.getAttribute("user");
+		User user = this.userRepository.getUserByEmail(principal.getName());
 		user.setStatus(false);
 		user.setCoins(user.getCoins() + (System.currentTimeMillis() - duration) / 360000000);
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDateTime now = LocalDateTime.now();
 		user.setDate(dtf.format(now));
 		this.userRepository.save(user);
-		session.setAttribute("user", user);
 		return "redirect:/signout";
 	}
 }

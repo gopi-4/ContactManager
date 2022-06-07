@@ -33,7 +33,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			Authentication authentication) throws IOException, ServletException {
 
 		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-		String emaiString = oAuth2User.getEmail();
+		String emaiString = oAuth2User.getName();
 		String nameString = oAuth2User.getName();
 		String authProvider = oAuth2User.getAuthProvider();
 //		String imageString = oAuth2User.getImage();
@@ -87,7 +87,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 		}
 		
 		//login with new User
-		response.sendRedirect("/check/social");
+		response.sendRedirect("/check/");
 		super.onAuthenticationSuccess(request, response, authentication);
 	}
 
