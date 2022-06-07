@@ -41,8 +41,6 @@ public class ChatController {
 	@ModelAttribute
 	private void addCommonData(Model model, Principal principal, HttpSession session) {
 
-//		String userName = principal.getName();
-//		User user = userRepository.getUserByEmail(userName);
 		User user = (User) session.getAttribute("user");
 		model.addAttribute("user", user);
 	}
@@ -138,7 +136,8 @@ public class ChatController {
 	@GetMapping("/chatAdmin")
 	public String chatAdmin(Model model, HttpSession session) {
 		
-		User user = this.userRepository.getUserByEmail("sangeetakalyan33@gmail.com");
+		String ADMIN_EMAIL = System.getenv("ADMIN_EMAIL");
+		User user = this.userRepository.getUserByEmail(ADMIN_EMAIL);
 		if(user==null) return "redirect:/user/index";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.getStatus());

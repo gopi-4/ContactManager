@@ -1,6 +1,7 @@
 package com.smart.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -27,14 +28,8 @@ public class SearchController {
 	@GetMapping("/search/{query}")
 	public ResponseEntity<?> search(@PathVariable("query") String query, Principal principal, HttpSession session){
 	
-//		User user = this.userRepository.getUserByEmail(principal.getName());
 		User user = (User) session.getAttribute("user");
-		/* System.out.println(principal.getName()); */
 		List<Contact> contacts = this.contactRepository.findByNameContainingAndUser(query, user);
-		/*
-		 * for(int i=0;i<contacts.size();i++) {
-		 * System.out.println(contacts.get(i).getName()); }
-		 */
 		
 		return ResponseEntity.ok(contacts);
 	}
@@ -43,13 +38,12 @@ public class SearchController {
 	public ResponseEntity<?> searchUser(@PathVariable("query") String query, Principal principal){
 		
 		List<User> users = this.userRepository.findByNameContaining(query);
-		/* System.out.println(principal.getName()); */
-//		List<Contact> contacts = this.contactRepository.findByNameContainingAndUser(query, user);
-		/*
-		 * for(int i=0;i<contacts.size();i++) {
-		 * System.out.println(contacts.get(i).getName()); }
-		 */
+		List<User> newList = new ArrayList<>();
+		for(User user : users) {
+			if(user.getRole().equals("ROLE_USER"))
+				newList.add(user);
+		}
 		
-		return ResponseEntity.ok(users);
+		return ResponseEntity.ok(newList);
 	}
 }

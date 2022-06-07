@@ -24,7 +24,6 @@ public class RedirectController {
 	private String where(Principal principal, Authentication authentication, HttpSession session) {
 		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 		String emailString = oAuth2User.getEmail();
-//		System.out.println(emailString);
 		User user = userRepository.getUserByEmail(emailString);
 		session.setAttribute("user", user);
 		if(user.getRole().equals("ROLE_ADMIN")) return "redirect:/admin/index";

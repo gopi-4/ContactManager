@@ -149,32 +149,6 @@ public class HomeController {
 		return "SignIn";
 	}
 	
-//	@GetMapping("/socialLogIn/{username}")
-//	public String signin(@PathVariable("username") String username, HttpSession session) {
-//		User user = this.userRepository.getUserByEmail(username);
-//		session.setAttribute("username", username);
-//		session.setAttribute("password", passwordEncoder.encode(user.getPassword()));
-//		return "redirect:/do_login";
-//	}
-	
-//	@GetMapping("/googlesignin")
-//	public String googlesignin(Model model, OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-//		CustomerOAuth2User customerOAuth2User;
-//		try {
-//			customerOAuth2User = (CustomerOAuth2User) CustomerOAuth2UserService.loadUser(userRequest);
-//		} catch (OAuth2AuthenticationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		String emailString = customerOAuth2User.getAttribute("email");
-//		System.out.println(emailString);
-//		User user = userRepository.getUserByEmail(emailString);
-//		if(user==null) return "Register";
-//		model.addAttribute("user", user);
-//		System.out.println(user.getName());
-//		return "normal/index";
-//	}
-	
 	@GetMapping("/forgetPassWord")
 	public String forgetPassWord(Model model) {
 		model.addAttribute("title", "Change Password");

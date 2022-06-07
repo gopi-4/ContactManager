@@ -59,16 +59,7 @@ public class AdminController {
 		model.addAttribute("title", "My Profile");
 		return "admin/profile";
 	}
-
-//	@GetMapping("/updateUser/{Id}")
-//	public String updateUser(@PathVariable("Id") Integer Id, Model model) {
-//
-//		model.addAttribute("title", "Update User");
-//		User user = this.userRepository.getById(Id);
-//		model.addAttribute("user", user);
-//		return "admin/updateUser";
-//	}
-
+	
 	@PostMapping("/process_updateUser")
 	public String updateUserHandler(@ModelAttribute User user, HttpSession session) {
 

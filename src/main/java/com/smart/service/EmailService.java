@@ -56,7 +56,8 @@ public class EmailService {
 			
 			SimpleMailMessage message = new SimpleMailMessage();
 	        
-	        message.setFrom("gkalyankar33@gmail.com");
+			String ADMIN_EMAIL = System.getenv("ADMIN_EMAIL");
+	        message.setFrom(ADMIN_EMAIL);
 	        message.setTo(to);
 	        message.setSubject(sub);
 	        message.setText(mes);
