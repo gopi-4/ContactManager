@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 100vh;" class="banner">
+		<div class="container">
+			<div class="d-flex justify-content-center h-100">
+				<div class="card">
+					<div class="card-header mt-4">
+						<div class="d-flex justify-content-end social_icon">
+							<span><i class="fab fa-facebook-square"></i></span> <span><i
+								class="fab fa-google-plus-square"></i></span> <span><i
+								class="fab fa-twitter-square"></i></span>
+						</div>
+						<h3>Enter OTP</h3>
+						<div th:if=${session.message}>
+							<div th:classappend="${'alert-'+session.message.type}"
+								class="alert alert-dismissible fade show text-center"
+								role="alert">
+								<span th:text="'*'+${session.message.content}"></span>
+								<button type="button" class="btn-close" data-bs-dismiss="alert"
+									aria-label="Close"></button>
+							</div>
+							<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+						</div>
+					</div>
+					<div class="card-body">
+						<form id="login-form" action="#" th:action="@{/OTPVerify}"
+							method="post">
+							<div class="input-group form-group text-center">
+								<div class="input-group-prepend">
+									<span class="input-group-text mt-3"><i
+										class="fas fa-envelope"></i></span>
+								</div>
+								<input type="text" id="OTP" name="OTP" class="form-control mt-3"
+									placeholder="Enter OTP" required>
+							</div>
+							<div class="text-center mt-2">
+								<p>* OTP expires in <span id="countdown">3 : 00</span>
+							</div>
+							<div class="form-group">
+								<input type="submit" id="submit" name="submit" value="Verify"
+									class="btn float-left login_btn my-3">
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			window.addEventListener('load', function () {
+				const startingMinutes = 3;
+				let time = startingMinutes *60;
+
+				const countdownEl = document.getElementById('countdown');
+
+				const id = setInterval(updateCountdown, 1000);
+
+				function updateCountdown() {
+					const minutes = Math.floor(time/60);
+					let seconds = time%60;
+				
+					seconds = seconds < 10 ? '0' + seconds : seconds;
+
+					countdownEl.innerHTML = `${minutes} : ${seconds}`;
+					time--;
+
+					if(time<0){
+						console.log(time);
+						window.location="/signin/";
+						clearInterval(id);
+					}
+				}	
+			});
+	</script>
+	</section>
+</body>
+</html>

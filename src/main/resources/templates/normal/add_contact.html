@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 110vh;" class="banner">
+		<div class="card-2">
+			<div class="card-body">
+				<h1 class="text-center">Add Contact</h1>
+				<div class="container-fluid mt-1">
+					<div class="row">
+						<div class="col-md-10 offset-md-1">
+							<div th:if=${session.message}>
+								<div th:classappend="${'alert-'+session.message.type}"
+									class="alert alert-dismissible fade show" role="alert">
+									<strong th:text="${session.message.type+'!!'}"></strong> <span
+										th:text="${session.message.content}"></span>
+									<button type="button" class="btn-close" data-bs-dismiss="alert"
+										aria-label="Close"></button>
+								</div>
+								<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+							</div>
+							<form enctype="multipart/form-data" th:action="@{/user/process_data}" method="POST" th:object="${contact}" class="mt-2">
+
+								<div class="mb-2">
+									<label for="exampleInputName" class="form-label">Name</label> <input
+										required type="text"
+										class="transparent form-control text-white" id="firstName"
+										name="name" placeholder="Enter Name">
+								</div>
+
+								<div class="mb-2">
+									<label for="exampleInputNickName" class="form-label">Nick Name</label> <input type="text"
+										class="transparent form-control text-white" id="nickname"
+										name="nickname" placeholder="Enter Nick Name">
+								</div>
+
+								<div class="mb-2">
+									<label for="exampleInputwork" class="form-label">Work</label> <input
+										type="text" class="transparent form-control text-white"
+										id="work" name="work" placeholder="Work">
+								</div>
+
+								<div class="mb-2">
+									<label for="exampleInputEmail" class="form-label">E-mail</label>
+									<input required type="text"
+										class="transparent form-control text-white" id="email"
+										name="email" placeholder="Enter E-mail">
+								</div>
+
+								<div class="mb-2">
+									<label for="exampleInputPhone" class="form-label">Phone
+										Number</label> <input required type="text"
+										class="transparent form-control text-white" id="phone"
+										th:classappend="${#fields.hasErrors('phone') ? 'is-invalid' : ''}"
+										name="phone" placeholder="Phone Number">
+										<div class="invalid-feedback text-white" th:each="e: ${#fields.errors('phone')}" th:text="${e}"></div>
+								</div>
+
+								<div class="mb-2 mt-4">
+									<textarea placeholder="Enter Contact Description"
+										class="transparent form-control text-white" name="description"
+										id="mytextarea" rows="5"></textarea>
+								</div>
+
+								<div class="mb-2 mt-4 custom-file">
+									<input type="file" name="profileImage" />
+								</div>
+
+								<div class="container text-center">
+									<button class="btn bg-primary text-white">ADD</button>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#addContact").addClass("active");
+			});
+		</script>
+	</section>
+</body>
+</html>

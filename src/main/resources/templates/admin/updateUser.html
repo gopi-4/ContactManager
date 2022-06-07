@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 100vh;" class="banner">
+		<div class="container">
+			<div class="d-flex justify-content-center h-100">
+			
+				<div class="card">
+					<!-- <div class="card-header mt-4"> -->
+						<!-- <h3>Sign In</h3>
+						<div class="d-flex justify-content-end social_icon">
+							<script src="https://apis.google.com/js/platform.js" async defer></script>
+							<span><i class="fab fa-facebook-square"></i></span> 
+							<a th:href="@{/oauth2/authorization/google}"><span><i class="fab fa-google-plus-square"></i></span></a>
+							<span><i class="fab fa-twitter-square"></i></span>
+						</div> -->
+					<!-- </div> -->
+					<div class="card-body mt-2">
+						<form id="login-form" action="#" th:action="@{/process_updateUser}"
+							method="post">
+							<label class="form-label">Role</label>
+							<input class="form-control" type="text" name="role" value="Norway"
+       							selectBoxOptions="Canada;Denmark;Finland;Germany;Mexico"> 
+							<!-- <input type="text" id="username" name="username"
+								class="form-control" placeholder="username" required> -->
+							<label class="form-label mt-2">Activation</label>
+							<input type="password" id="password" name="password"
+								class="form-control" placeholder="password" required>
+							<div class="form-group mt-3">
+								<input type="submit" id="submit" name="submit" value="submit"
+									class="btn float-left login_btn">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

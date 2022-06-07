@@ -1,0 +1,68 @@
+server:
+  port: 80
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+spring:
+  datasource:
+    dbcp2:
+      driver-class-name: org.postgresql.Driver
+    name: ds
+    password: 67571ea44ff56ff93106c784a3bb82d1cbae82206dab92e07e6ba44b6b4bb693
+    url: jdbc:postgresql://ec2-34-198-186-145.compute-1.amazonaws.com:5432/d47av8kh7ms68v
+    username: rmganmcjjvsjbb
+#  datasource:
+#    dbcp2:
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#    name: ds
+#    password: root
+#    url: jdbc:mysql://localhost:8080/smartcontact?serverTimezone=UTC
+#    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+#      dialect: org.hibernate.dialect.MySQL8Dialect
+        
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  security:
+    oauth2:
+      client:
+        registration:
+         facebook:
+          clientId: 742312823799469
+          clientSecret: e4f05e32b7c846328b2c59d9d09c9828
+          scope:
+           - email
+           - public_profile
+         google:
+          clientId: 282997076007-qbc2j46arkc5ak9pcffif8gihmdocuib.apps.googleusercontent.com
+          clientSecret: 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
+          scope:
+           - https://www.googleapis.com/auth/userinfo.email
+           - https://www.googleapis.com/auth/userinfo.profile
+         github:
+          clientId: 4c50b06fc357bc45a730
+          clientSecret: 2bb9d40b698e890f62448fd7ca2fb2e24774edf4
+          scope:
+           - user:email
+           - read:user
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: gkalyankar33@gmail.com
+    password: pkloghjntsvdqkfl
+    port: 587
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail:
+        smtp: 
+          auth: true
+          starttls:
+            enable: true
