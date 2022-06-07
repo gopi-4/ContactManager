@@ -123,7 +123,7 @@
 					$(".search-result").hide();
 				}else{
 				
-				let url = ` https://scm-v1.herokuapp.com/${query}`;
+				let url = ` https://scm-v1.herokuapp.com/search/${query}`;
 			
 					fetch(url).then((Response) => {
 						return Response.json();
