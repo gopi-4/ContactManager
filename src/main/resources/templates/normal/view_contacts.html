@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
 	th:replace="normal/base::Layout(~{::section})">
 <head>
 <meta charset="UTF-8" />
@@ -123,7 +123,7 @@
 					$(".search-result").hide();
 				}else{
 				
-				let url = `http://localhost:80/search/${query}`;
+				let url = ` https://scm-v1.herokuapp.com/${query}`;
 			
 					fetch(url).then((Response) => {
 						return Response.json();
