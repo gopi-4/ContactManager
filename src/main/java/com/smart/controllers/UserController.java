@@ -119,8 +119,8 @@ public class UserController {
 			else
 				contact.setUnique_id(0);
 
-//			this.userRepository.save(user);
-			this.contactRepository.save(contact);
+			this.userRepository.save(user);
+//			this.contactRepository.save(contact);
 
 			session.setAttribute("message", new Message("Contact Added Successfully..", "success"));
 
