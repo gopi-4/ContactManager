@@ -34,7 +34,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
 		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 		String emaiString = oAuth2User.getName();
-		String nameString = oAuth2User.getName();
+		String nameString = oAuth2User.getFullName();
 		String authProvider = oAuth2User.getAuthProvider();
 //		String imageString = oAuth2User.getImage();
 //		String aboutString = oAuth2User.getAbout();

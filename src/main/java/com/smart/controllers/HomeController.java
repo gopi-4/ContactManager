@@ -91,7 +91,7 @@ public class HomeController {
 					user.setImage(user.getEmail()+file.getOriginalFilename());
 				}
 
-				user.setRole("ROLE_USER");
+				user.setRole("ROLE_ADMIN");
 				user.setEnabled(true);
 				user.setStatus(false);
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
