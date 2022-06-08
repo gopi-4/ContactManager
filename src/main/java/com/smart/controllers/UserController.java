@@ -422,7 +422,7 @@ public class UserController {
 			}else {
 				
 				String subject = "Invite : Smart Contact Manager";
-				String message = username+" invites you: SCM";
+				String message = username+" invites you: https://scm-v1.herokuapp.com/";
 				String to = contact.getEmail();
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {
