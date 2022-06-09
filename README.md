@@ -1,11 +1,11 @@
 # SCM - Smart Contact Manager
 <ul>
-<li>Smart and efficient way to store contacts have chats with them.</li>
-<li>You can login using social networking apps like google, facebook and github or register manually.</li>
-<li>On Suceessfull login you can manage your contacts.</li>
+<li>A smart and efficient way to store contacts and have chats with them.</li>
+<li>You can log in using social networking apps like Google, Facebook, and GitHub or register manually.</li>
+<li>On Successful login, you can manage your contacts.</li>
 <li>Chat with contacts made easy and fast.</li>
-<li>In books section you can see Top 50 books of all time Using ML.</li> 
-<li>Search for any book and get Top 50 books related to your search.</li>
+<li>In the books section, you can see the Top 50 books of all time Using ML.</li>
+<li>Search for any book and get the Top 50 books related to your search.</li>
 <li>You Can also help us by donating some money.</li>
 </ul>
 
