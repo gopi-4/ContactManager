@@ -4,7 +4,7 @@
 <li>You can login using social networking apps like google, facebook and github or register manually.</li>
 <li>On Suceessfull login you can manage your contacts.</li>
 <li>Chat with contacts made easy and fast.</li>
-<li>In books section you can see Top 50 books of all time.</li> 
+<li>In books section you can see Top 50 books of all time Using ML.</li> 
 <li>Search for any book and get Top 50 books related to your search.</li>
 <li>You Can also help us by donating some money.</li>
 </ul>
