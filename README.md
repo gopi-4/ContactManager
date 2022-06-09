@@ -6,7 +6,7 @@
 <li>Chat with contacts made easy and fast.</li>
 <li>In the books section, you can see the Top 50 books of all time Using ML.</li>
 <li>Search for any book and get the Top 50 books related to your search.</li>
-<li>Admin can access all user data and also remove user is not active for a period.</li>
+<li>Admin can access all user's data and also remove them if not active for a while.</li>
 <li>You also help us by donating some money.</li>
 </ul>
 
