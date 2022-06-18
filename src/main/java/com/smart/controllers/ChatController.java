@@ -92,6 +92,7 @@ public class ChatController {
 		
 		User user = this.userRepository.getById(userId);
 		if(user==null) return "redirect:/admin/viewUsers/0";
+		System.out.println(user.getName());
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.getStatus());
 		return "admin/chat";

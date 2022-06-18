@@ -27,5 +27,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Transactional
 	public List<User> findByNameContaining(String query);
+	
+	@Transactional
+	@Query( "select u from User u where u.Id = :userId" )
+	public User getById(int userId);
 
 }
