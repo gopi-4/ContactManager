@@ -17,7 +17,7 @@
 	<description>spring boot project</description>
 
 	<properties>
-		<java.version>11.0.15</java.version>
+		<java.version>18</java.version>
 	</properties>
 	<dependencies>
 
