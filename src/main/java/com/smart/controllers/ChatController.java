@@ -90,7 +90,7 @@ public class ChatController {
 	@GetMapping("/admin/{userId}")
 	public String adminChat(@PathVariable("userId") int userId, Model model, Principal principal) {
 		
-		User user = this.userRepository.getUserByEmail(principal.getName());
+		User user = this.userRepository.getById(userId);
 		if(user==null) return "redirect:/admin/viewUsers/0";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.getStatus());

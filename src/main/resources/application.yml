@@ -9,9 +9,9 @@ spring:
     dbcp2:
       driver-class-name: org.postgresql.Driver
     name: ds
-    password: a9171b9eec834d2ccf39ded129de2cb896154c1906369787ed84b1a4363c8502
-    url: jdbc:postgresql://ec2-52-71-23-11.compute-1.amazonaws.com:5432/d9ltm34hg45beb
-    username: aovtlyolrsgmpp
+    password: 3a96850bce20b9e12279643405c38fb5937edfc0fcdbcff08e44ba97a8c6f78a
+    url: jdbc:postgresql://ec2-52-72-56-59.compute-1.amazonaws.com:5432/d6kkccj2jivp4d
+    username: seqxhnqgbzewrl
     
 #  datasource:
 #    dbcp2:
@@ -22,7 +22,7 @@ spring:
 #    username: root
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       dialect: org.hibernate.dialect.PostgreSQLDialect
 #      dialect: org.hibernate.dialect.MySQL8Dialect
