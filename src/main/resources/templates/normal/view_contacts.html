@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	th:replace="normal/base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 110vh;" class="banner">
+		<div class="card-3" th:if="${contacts}">
+			<div class="card-body">
+				<h1 class="text-center" th:text="${user.name}+' Contacts'"></h1>
+				<div th:if=${session.message}>
+					<div th:classappend="${'alert-'+session.message.type}"
+						class="alert alert-dismissible fade show" role="alert">
+						<strong th:text="${session.message.type+'!!'}"></strong> <span
+							th:text="${session.message.content}"></span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert"
+							aria-label="Close"></button>
+					</div>
+					<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+				</div>
+				<div class="table-responsive">
+					<!-- Search -->
+					<div class="search-container my-4 right">
+						<input onkeyup="search()" id="search-input" type="text"
+							class="form-control transparent text-white" placeholder="Search" />
+						<div class="search-result"></div>
+					</div>
+					<table class="table text-white">
+						<thead>
+							<tr>
+								<th scope="col">#ID</th>
+								<th scope="col">Name</th>
+								<th scope="col">E-mail</th>
+								<th scope="col">Status</th>
+								<th scope="col">Phone No.</th>
+								<th scope="col">Message</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr th:each="c : ${contacts}">
+								<th scope="row" th:text="'SCM2021-'+${c.Cid}">1</th>
+								<td><img src="" class="profile-picture"
+									th:src="@{'data:image/jpeg;base64,'+${c.image}}" alt="profile photo"><span th:text="' '+${c.name}"></span></img>
+								<td><a href="" th:href="@{'/user/contact/'+${c.Cid}}">
+										<span th:text="${c.email}"></span>
+								</a></td>
+								<td th:text="${c.status}"></td>
+								<td th:text="${c.phone}"></td>
+								<td><!-- <a href="#" th:onclick="|deleteContact(${c.Cid})|"
+									class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+									<a class="btn bg-primary" th:href="@{'/user/updateContact/'+${c.Cid}}">
+									<i class="fas fa-pen-nib"></i></a>  -->
+									<a th:if="${c.status != 'Not Registered'}" class="btn bg-warning" th:target="_blank" th:href="@{'/chat/'+${c.Cid}}">
+									<i class="fa-regular fa-envelope"></i></a>
+									<a th:if="${c.status == 'Not Registered'}" class="btn bg-warning" th:href="@{'/user/invite/'+${user.name}+'/'+${c.Cid}}+'/'+${currentPage}">
+									<i class="fa-brands fa-telegram"></i></a>
+									</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+				<div th:if="${totalPages != -1}">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination" th:if="${totalPages>=0}">
+						<li th:if="${currentPage != 0}" class="page-item"><a
+							class="page-link bg-primary" href="#"
+							th:href="@{'/user/view_contacts/'+${currentPage-1}}"><span
+								class="text-black">Previous</span></a></li>
+						<li th:each="i : ${#numbers.sequence(1, totalPages+1)}"
+							th:classappend=" ${currentPage==i-1} ? 'active' : '' "
+							class="page-item"><a
+							th:classappend=" ${currentPage==i-1} ? 'bg-primary' : '' "
+							class="page-link" href="#"
+							th:href="@{'/user/view_contacts/'+${i-1}}"><span
+								th:text="${i}"></span></a></li>
+						<li th:if="${currentPage != totalPages}" class="page-item"><a
+							class="page-link bg-primary" href="#"
+							th:href="@{'/user/view_contacts/'+${currentPage+1}}"><span
+								class="text-black">Next</span></a></li>
+					</ul>
+				</nav>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#viewContacts").addClass("active");
+			});
+		</script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<!-- <script>
+			function deleteContact(Cid){
+				swal({
+					  title: "Are you sure?",
+					  text: "Once deleted, you will not be able to recover this contact!",
+					  icon: "warning",
+					  buttons: true,
+					  dangerMode: true,
+					})
+					.then((willDelete) => {
+					  if (willDelete) {
+					      window.location="/user/delete/"+Cid;
+						  /* swal("Poof! Your imaginary file has been deleted!", {
+					      icon: "success",
+					    }); */
+					  } else {
+					    swal("Your contact is safe!!");
+					  }
+					});
+			} 
+		</script> -->
+		<script>
+			const search = () => {
+			
+				let query = $("#search-input").val();
+			
+				if(query==""){
+					$(".search-result").hide();
+				}else{
+				
+				let url = ` https://scm-v1.herokuapp.com/search/${query}`;
+			
+					fetch(url).then((Response) => {
+						return Response.json();
+					}).then((data) => {
+						/*console.log(data);*/
+					
+						let text = `<div class='list-group'>`;
+					
+						Object.keys(data).forEach((k) => {
+							text+= `<a href='/user/contact/${data[k].cid}' class='list-group-item list-group-action'> ${data[k].name} </a>`;
+						});
+						text+='</div>';
+						$(".search-result").html(text);
+						$(".search-result").show();
+					});	
+				}
+			};
+		</script>
+		<h1 class="text-center mt-4" style="margin-top: 200px" th:unless="${contacts}">Your are not
+			premitted here....</h1>
+	</section>
+</body>
+</html>

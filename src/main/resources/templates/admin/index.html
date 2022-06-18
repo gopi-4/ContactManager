@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	th:replace="admin/base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 100vh;"
+		class="banner d-flex justify-content-center align-items-center">
+		<div class="text-center">
+			<h1 class="font-weight-bold">Smart Contact Manager</h1>
+			<p>Start collecting your contacts in very smart way. We provide
+				very efficient and smarter way of handling contacts.</p>
+			<p>You are admin.</p>
+		</div>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#home").addClass("active");
+			});
+		</script>
+	</section>
+</body>
+</html>

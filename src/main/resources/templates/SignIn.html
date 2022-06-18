@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	th:replace="base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 100vh;" class="banner">
+		<div class="container">
+			<div class="d-flex justify-content-center h-100">
+			
+				<div class="card">
+					<div class="card-header mt-4">
+						<h3>Sign In</h3>
+						<div class="d-flex justify-content-end social_icon">
+							<script src="https://apis.google.com/js/platform.js" async defer></script>
+							<a th:href="@{/oauth2/authorization/facebook}"><span><i class="fab fa-facebook-square"></i></span></a> 
+							<a th:href="@{/oauth2/authorization/google}"><span><i class="fab fa-google-plus-square"></i></span></a>
+							<a th:href="@{/oauth2/authorization/github}"><span><i class="fab fa-github-square"></i></span></a>
+						</div>
+					</div>
+					<div class="card-body mt-2">
+						<form id="login-form" action="#" th:action="@{/do_login}"
+							method="post">
+							<div class="input-group form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fas fa-user"></i></span>
+								</div>
+								<input type="text" id="username" name="username"
+									class="form-control" placeholder="username" required>
+
+							</div>
+							<div class="input-group form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text mt-3"><i
+										class="fas fa-key"></i></span>
+								</div>
+								<input type="password" id="password" name="password"
+									class="form-control mt-3" placeholder="password" required>
+							</div>
+							<div class="row align-items-center remember">
+								<input class="checkbox" type="checkbox">Remember Me
+							</div>
+							<div th:if="${param.error}" class="alert mt-2 text-center">
+								*Invalid Username and Password.</div>
+							<div th:if="${param.logout}" class="alert mt-2 text-center">
+								*Successfully LogOut.</div>
+							<div th:if="${param.change}" class="alert mt-2 text-center">
+								<p th:text="${param.change}"></p>	
+							</div>
+							<div class="form-group mt-2">
+								<input type="submit" id="submit" name="submit" value="submit"
+									class="btn float-left login_btn">
+							</div>
+						</form>
+						<div class="card-footer mt-2">
+							<div class="d-flex justify-content-center links">
+								Don't have an account?<a th:href="@{/signup/}">Sign Up</a>
+							</div>
+							<div class="d-flex justify-content-center">
+								<a href="#" th:href="@{/forgetPassWord}">Forgot your password?</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
