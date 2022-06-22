@@ -110,7 +110,7 @@ public class AdminController {
 		try {
 			User user = this.userRepository.getById(Id);
 			this.userRepository.delete(user);
-			session.setAttribute("message", new Message("Contact Deleted Successfully...", "success"));
+			session.setAttribute("message", new Message("User Deleted Successfully...", "success"));
 
 		} catch (Exception e) {
 			session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));
