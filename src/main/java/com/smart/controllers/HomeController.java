@@ -152,7 +152,7 @@ public class HomeController {
 	@GetMapping("/forgetPassWord")
 	public String forgetPassWord(Model model) {
 		model.addAttribute("title", "Change Password");
-		return "forgetPassWord";
+		return "forgetPassword";
 	}
 
 	@PostMapping("/passwordUpdate")

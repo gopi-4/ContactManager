@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.smart.dao.UserRepository;
@@ -57,20 +56,20 @@ public class AdminController {
 		return "admin/profile";
 	}
 	
-	@PostMapping("/process_updateUser")
-	public String updateUserHandler(@ModelAttribute User user, HttpSession session) {
-
-		try {
-			this.userRepository.save(user);
-			session.setAttribute("user", user);
-			session.setAttribute("message", new Message("User updated successfully...", "success"));
-		} catch (Exception e) {
-			session.setAttribute("message", new Message("Error updating User...", "danger"));
-			e.printStackTrace();
-		}
-		return "redirect:/user/profile";
-
-	}
+//	@PostMapping("/process_updateUser")
+//	public String updateUserHandler(@ModelAttribute User user, HttpSession session) {
+//
+//		try {
+//			this.userRepository.save(user);
+//			session.setAttribute("user", user);
+//			session.setAttribute("message", new Message("User updated successfully...", "success"));
+//		} catch (Exception e) {
+//			session.setAttribute("message", new Message("Error updating User...", "danger"));
+//			e.printStackTrace();
+//		}
+//		return "redirect:/user/profile";
+//
+//	}
 	
 	@GetMapping("/viewUsers/{page}")
 	private String viewUsers(@PathVariable("page") Integer page, Model model) {
