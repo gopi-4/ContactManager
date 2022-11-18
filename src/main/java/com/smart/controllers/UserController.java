@@ -60,18 +60,17 @@ public class UserController {
 
 	long duration = 0;
 
-	  @ModelAttribute private void addCommonData(Model model, Principal principal){
+	@ModelAttribute 
+	private void addCommonData(Model model, Principal principal){
 	  
-		  User user = this.userRepository.getUserByEmail(principal.getName());
-		  model.addAttribute("user", user); 
-	  }
-
-	@RequestMapping("/index")
-	private String index(Model model, Principal principal) {
-
+//		System.out.println(principal.getName());
 		User user = this.userRepository.getUserByEmail(principal.getName());
-		user.setStatus(true);
-		this.userRepository.save(user);
+		model.addAttribute("user", user); 
+	}
+
+	@GetMapping("/index")
+	private String index(Model model) {
+
 		model.addAttribute("title", "User Dashboard");
 		duration = System.currentTimeMillis();
 		return "normal/index";
@@ -86,8 +85,7 @@ public class UserController {
 	}
 
 	@PostMapping("/process_data")
-	private String process_data(@ModelAttribute() Contact contact, Principal principal,
-			@RequestParam("profileImage") MultipartFile file, Model model, HttpSession session) {
+	private String process_data(@ModelAttribute() Contact contact, @RequestParam("profileImage") MultipartFile file, Model model, Principal principal, HttpSession session) {
 
 		try {
 
@@ -101,17 +99,6 @@ public class UserController {
 			}else {
 				contact.setImage(Base64Utils.encodeToString(file.getBytes()));
 			}
-//			if (file.isEmpty()) {
-//				contact.setImage("default.jpg");
-//			} else {
-//
-//				File saveFile = new ClassPathResource("static" + File.separator + "images").getFile();
-//				Path path = Paths.get(
-//						saveFile.getAbsolutePath() + File.separator + contact.getEmail() + file.getOriginalFilename());
-//				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//
-//				contact.setImage(contact.getEmail() + file.getOriginalFilename());
-//			}
 
 			contact.setUser(user);
 			user.getContacts().add(contact);
@@ -123,7 +110,6 @@ public class UserController {
 				contact.setUnique_id(0);
 
 			this.userRepository.save(user);
-//			this.contactRepository.save(contact);
 
 			session.setAttribute("message", new Message("Contact Added Successfully..", "success"));
 
@@ -158,12 +144,9 @@ public class UserController {
 			for (User user2 : users)
 				userEmailsList.add(user2.getEmail());
 			for (Contact contact : contacts) {
-				if (userEmailsList.contains(contact.getEmail())) {
-					User user3 = this.userRepository.getUserByEmail(contact.getEmail());
-					if (user3.getStatus())
-						contact.setStatus("Online");
-					else
-						contact.setStatus("Offline");
+				User user1 = this.userRepository.getUserByEmail(contact.getEmail());
+				if (user1!=null) {
+					contact.setStatus(user1.getStatus() ? "Online" : "Offline");
 				} else {
 					contact.setStatus("Not Registered");
 				}
@@ -206,8 +189,7 @@ public class UserController {
 	}
 
 	@GetMapping("/delete/{Cid}")
-	public String deleteContact(@PathVariable("Cid") Integer Cid, Model model, Principal principal,
-			HttpSession session) {
+	public String deleteContact(@PathVariable("Cid") Integer Cid, Principal principal, HttpSession session) {
 
 		try {
 			String userEmail = principal.getName();
@@ -219,12 +201,7 @@ public class UserController {
 
 				user.getContacts().remove(contact);
 				this.userRepository.save(user);
-
-//				if (!contact.getImage().equals("default.jpg")) {
-//					File fileToDelete = new ClassPathResource("static" + File.separator + "images").getFile();
-//					File file = new File(fileToDelete, contact.getImage());
-//					file.delete();
-//				}
+				session.setAttribute("user", user);
 				session.setAttribute("message", new Message("Contact Deleted Successfully...", "success"));
 			} else {
 				session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));
@@ -239,8 +216,7 @@ public class UserController {
 	}
 
 	@GetMapping("/updateContact/{Cid}")
-	public String updateContact(@PathVariable("Cid") Integer Cid, Model model, Principal principal,
-			HttpSession session) {
+	public String updateContact(@PathVariable("Cid") Integer Cid, Model model, Principal principal) {
 
 		String userEmail = principal.getName();
 		User user = this.userRepository.getUserByEmail(userEmail);
@@ -257,28 +233,10 @@ public class UserController {
 
 	@PostMapping("/process_updateContact")
 	public String updateContactHandler(@ModelAttribute Contact contact,
-			@RequestParam("profileImage") MultipartFile file, Model model, HttpSession session, Principal principal) {
+			@RequestParam("profileImage") MultipartFile file, Model model, Principal principal, HttpSession session) {
 
 		try {
 
-//			Contact oldContact = this.contactRepository.findById(contact.getCid()).get();
-//			if (!file.isEmpty()) {
-//
-//				// Delete
-//				File fileToDelete = new ClassPathResource("static" + File.separator + "images").getFile();
-//				File file1 = new File(fileToDelete, oldContact.getImage());
-//				file1.delete();
-//
-//				// update
-//				File saveFile = new ClassPathResource("static" + File.separator + "images").getFile();
-//				Path path = Paths.get(
-//						saveFile.getAbsolutePath() + File.separator + contact.getEmail() + file.getOriginalFilename());
-//				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//
-//				contact.setImage(contact.getEmail() + file.getOriginalFilename());
-//			} else {
-//				contact.setImage(oldContact.getImage());
-//			}
 			if(!file.isEmpty()) {
 				contact.setImage(Base64Utils.encodeToString(file.getBytes()));
 			}
@@ -325,25 +283,9 @@ public class UserController {
 				if(!file.isEmpty()) {
 					user.setImage(Base64Utils.encodeToString(file.getBytes()));
 				}
-//				if (!file.isEmpty()) {
-//
-//					// Delete
-//					File fileToDelete = new ClassPathResource("static" + File.separator + "images").getFile();
-//					File file1 = new File(fileToDelete, user.getImage());
-//					if (file1 != null) {
-//						file1.delete();
-//					}
-//
-//					// update
-//					File saveFile = new ClassPathResource("static/images").getFile();
-//					Path path = Paths.get(
-//							saveFile.getAbsolutePath() + File.separator + user.getEmail() + file.getOriginalFilename());
-//					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//
-//					user.setImage(user.getEmail() + file.getOriginalFilename());
-//				}
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				this.userRepository.save(user);
+				session.setAttribute("user", user);
 				session.setAttribute("message", new Message("User updated successfully...", "success"));
 			} else {
 				System.out.println("Please Accepts term's and condition's.");
@@ -387,7 +329,6 @@ public class UserController {
 			List<Book> books = responseEntity.getBody();
 			model.addAttribute("books", books);
 			model.addAttribute("book", "Most Popular Books.");
-//			for(Book b : books) System.out.println(b.toString());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -412,7 +353,6 @@ public class UserController {
 			List<Book> books = responseEntity.getBody();
 			model.addAttribute("books", books);
 			model.addAttribute("book", bookName);
-//			for(Book b : books) System.out.println(b.toString());
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -431,7 +371,7 @@ public class UserController {
 			}else {
 				
 				String subject = "Invite : Smart Contact Manager";
-				String message = username+" invites you: https://scm-v1.herokuapp.com/";
+				String message = username+" invites you to : https://scm-v1.herokuapp.com/";
 				String to = contact.getEmail();
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {

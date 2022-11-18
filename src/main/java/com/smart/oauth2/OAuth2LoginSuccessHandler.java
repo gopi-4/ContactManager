@@ -35,21 +35,18 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			Authentication authentication) throws IOException, ServletException {
 
 		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-		String emaiString = oAuth2User.getName();
+		String emailString = oAuth2User.getName();
 		String nameString = oAuth2User.getFullName();
 		String authProvider = oAuth2User.getAuthProvider();
-//		String imageString = oAuth2User.getImage();
-//		String aboutString = oAuth2User.getAbout();
-		System.out.println(emaiString);
-//		System.out.println("Hii");
-		User user = this.userRepository.getUserByEmail(emaiString);
+		System.out.println(emailString);
+		User user = this.userRepository.getUserByEmail(emailString);
 		if(user==null) {
 			//Register newUser
 			System.out.println("user is null");
 			User newUser = new User();
 			newUser.setName(nameString);
-			newUser.setEmail(emaiString);
-			newUser.setPassword(nameString+"+"+emaiString);			
+			newUser.setEmail(emailString);
+			newUser.setPassword(nameString+"+"+emailString);
 			newUser.setRole("ROLE_USER");
 //			newUser.setImage("default.jpg");
 			FileInputStream fileInputStream = new FileInputStream("src/main/resources/static/images/default.jpg");
@@ -73,7 +70,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			
 			this.userRepository.save(newUser);
 			
-			Contact contact = this.contactRepository.getContactByEmail(emaiString);
+			Contact contact = this.contactRepository.getContactByEmail(emailString);
 			if (contact!=null) {
 				contact.setUnique_id(newUser.getId());
 				this.contactRepository.save(contact);

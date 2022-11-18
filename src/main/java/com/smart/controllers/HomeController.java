@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +27,7 @@ import com.smart.helpers.Message;
 import com.smart.service.EmailService;
 
 @Controller
+@EnableCaching
 public class HomeController {
 
 	@Autowired
@@ -42,27 +42,27 @@ public class HomeController {
 	@Autowired
 	private EmailService emailService;
 	
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("title", "Home - Smart Contact Manager");
 		return "home";
 	}
 	
-	@RequestMapping("/about")
+	@GetMapping("/about")
 	private String about(Model model) {
 	
 		model.addAttribute("title", "About");
 		return "about";
 	}
 
-	@RequestMapping("/signup")
+	@GetMapping("/signup")
 	public String signup(Model model) {
 		model.addAttribute("title", "SignUp - Smart Contact Manager");
 		model.addAttribute("user", new User());
 		return "Register";
 	}
 
-	@RequestMapping(value = "/do_registration", method = RequestMethod.POST)
+	@PostMapping(value = "/do_registration")
 	public String do_registration(@Valid @ModelAttribute("user") User user,
 			@RequestParam("profileImageUser") MultipartFile file, BindingResult result,
 			@RequestParam(value = "agreement", defaultValue = "false") boolean agreement, Model model,
@@ -79,17 +79,6 @@ public class HomeController {
 				}else {
 					user.setImage(Base64Utils.encodeToString(file.getBytes()));
 				}
-//				if (file.isEmpty()) {
-//					user.setImage("default.jpg");
-//					System.out.println("File is empty");
-//				} else {
-//
-//					File saveFile = new ClassPathResource("static"+File.separator+"images").getFile();
-//					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + user.getEmail() + file.getOriginalFilename());
-//					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//
-//					user.setImage(user.getEmail()+file.getOriginalFilename());
-//				}
 
 				user.setRole("ROLE_USER");
 				user.setEnabled(true);
@@ -118,7 +107,7 @@ public class HomeController {
 
 				model.addAttribute("user", new User());
 				model.addAttribute("title", "SignUp - Smart Contact Manager");
-
+				
 				return "Register";
 			} else {
 				System.out.println("Please Accepts term's and condition's.");
@@ -171,7 +160,7 @@ public class HomeController {
 				int OTP = random.nextInt(99999);
 				
 				String subject = "OTP : Smart Contact Manager";
-				String message = "<h1> OTP is <b>"+OTP+"</b></h1>";
+				String message = String.valueOf(OTP);
 				String to = user.getEmail();
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {

@@ -13,7 +13,7 @@ import com.smart.entities.Contact;
 import com.smart.entities.User;
 
 public interface ContactRepository extends JpaRepository<Contact, Integer>{
-
+	
 	@Transactional
 	@Query("from Contact as c where c.user.id =:userId")
 	public Page<Contact> findContactsByUser(@Param("userId") int userId, Pageable pageable);
