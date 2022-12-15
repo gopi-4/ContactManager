@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	th:replace="normal/base::Layout(~{::section})">
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section
+		class="banner d-flex justify-content-center align-items-center">
+		 <div class="container">
+		 	<div style="margin-top: 100px;">
+		 	<h1 class="my-4 text-center"><span id="cityname"></span></h1>
+		 	</div>
+			<div class="row row-cols-1 row-cols-md-3 mb-3">
+		     <div class="col">
+		       <div class="card2 mb-2 rounded-3">
+		         <div class="card-header py-1 bg-primary">
+		           <h4 class="my-0 fw-normal">Temperature</h4>
+		         </div>
+		         <div class="card-body text-center">
+		           <h1 class="card-title pricing-card-title mt-3"><span id="temp2"></span><small class="text-muted fw-light"><span>&#8451;</span></small></h1>
+		           <ul class="list-unstyled mt-4 mb-4" style="font-size:20px;">
+		             <li>Temperature is <span id="temp"></span></li>
+		             <li>Min Temperature is <span id="min_temp"></span></li>
+		             <li>Max Temperature is <span id="max_temp"></span></li>
+		           </ul>
+		         </div>
+		       </div>
+		     </div>
+		     <div class="col">
+		       <div class="card2 mb-2 rounded-3 shadow-sm">
+		         <div class="card-header py-1 bg-primary">
+		           <h4 class="my-0 fw-normal">Humidity</h4>
+		         </div>
+		         <div class="card-body text-center">
+		           <h1 class="card-title pricing-card-title mt-3"><span id="humidity2"></span><small class="text-muted fw-light"> %</small></h1>
+		           <ul class="list-unstyled mt-4 mb-4" style="font-size:20px;">
+		             <li>Cloud PCT is <span id="cloud_pct"></span></li>
+		             <li>Feels Like is <span id="feels_like"></span></li>
+		             <li>Humidity is <span id="humidity"></span></li>
+		           </ul>
+		         </div>
+		       </div>
+		     </div>
+		     <div class="col">
+		       <div class="card2 mb-2 rounded-3 shadow-sm border-primary">
+		         <div class="card-header py-1 text-bg-primary bg-primary">
+		           <h4 class="my-0 fw-normal">Wind</h4>
+		         </div>
+		         <div class="card-body text-center">
+		           <h1 class="card-title pricing-card-title mt-3"><span id="wind_speed"></span><small class="text-muted fw-light"> km/hr</small></h1>
+		           <ul class="list-unstyled mt-4 mb-4" style="font-size:20px;">
+		             <li>Wind Degree is <span id="wind_degrees"></span></li>
+		             <li>Sunrise at <span id="sunrise"></span></li>
+		             <li>Sunset at <span id="sunset"></span></li>
+		           </ul>
+		         </div>
+		       </div>
+		     </div>
+		   </div>
+		
+			<div class="search-container" style="width: 450px;  margin-left:410px; margin-top:50px;">
+				<form class="d-flex" role="search">
+		        <input id="city" class="form-control me-2 transparent" type="search" placeholder="City" aria-label="Search">
+		        <button class="btn bg-primary" type="submit" id="submit">Search</button>
+		      </form>
+			</div>
+		</div>	
+		<script>
+			const options = {
+				method: 'GET',
+				headers: {
+					'X-RapidAPI-Key': '4697b1aa7amshac6cba8b552ee10p1cb994jsnd98f1e2db678',
+					'X-RapidAPI-Host': 'weather-by-api-ninjas.p.rapidapi.com'
+				}
+			};
+			const getWeather = (city)=>{
+					
+					cityname.innerHTML = city;
+					fetch('https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city='+city, options)
+					.then(response => response.json())
+					.then(response => {
+						console.log(response)
+						cloud_pct.innerHTML =  response.cloud_pct,
+						temp.innerHTML = response.temp,
+						temp2.innerHTML = response.temp,
+						feels_like.innerHTML = response.feels_like,
+						humidity.innerHTML = response.humidity,
+						humidity2.innerHTML = response.humidity,
+						min_temp.innerHTML = response.min_temp,
+						max_temp.innerHTML = response.max_temp,
+						wind_speed.innerHTML = response.wind_speed,
+						wind_degrees.innerHTML = response.wind_degrees,
+						dateObj = new Date(response.sunrise * 1000);
+			            utcString = dateObj.toUTCString();
+			            time = utcString.slice(-11, -4);
+						sunrise.innerHTML = time,
+						dateObj2 = new Date(response.sunset * 1000);
+			            utcString2 = dateObj2.toUTCString();
+			            time2 = utcString2.slice(-11, -4);
+						sunset.innerHTML = time2
+					})
+					.catch(err => console.error(err));	
+			}
+			
+			submit.addEventListener("click", (e)=>{
+				e.preventDefault()
+				getWeather(city.value)	
+			})
+			
+			getWeather("Delhi")
+		</script>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#home").addClass("active");
+			});
+		</script>
+	</section>
+</body>
+</html>

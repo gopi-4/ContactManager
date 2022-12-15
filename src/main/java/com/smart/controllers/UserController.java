@@ -73,7 +73,7 @@ public class UserController {
 
 		model.addAttribute("title", "User Dashboard");
 		duration = System.currentTimeMillis();
-		return "normal/index";
+		return "normal/wheather";
 	}
 
 	@GetMapping("/add_contact")
@@ -201,7 +201,6 @@ public class UserController {
 
 				user.getContacts().remove(contact);
 				this.userRepository.save(user);
-				session.setAttribute("user", user);
 				session.setAttribute("message", new Message("Contact Deleted Successfully...", "success"));
 			} else {
 				session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));
@@ -285,7 +284,6 @@ public class UserController {
 				}
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				this.userRepository.save(user);
-				session.setAttribute("user", user);
 				session.setAttribute("message", new Message("User updated successfully...", "success"));
 			} else {
 				System.out.println("Please Accepts term's and condition's.");

@@ -38,7 +38,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 		String emailString = oAuth2User.getName();
 		String nameString = oAuth2User.getFullName();
 		String authProvider = oAuth2User.getAuthProvider();
-		System.out.println(emailString);
+//		System.out.println(emailString);
 		User user = this.userRepository.getUserByEmail(emailString);
 		if(user==null) {
 			//Register newUser

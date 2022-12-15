@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,19 +32,15 @@ public class AdminController {
 	private long duration;
 	
 	@ModelAttribute
-	private void addCommonData(Model model, HttpSession session) {
+	private void addCommonData(Model model, Principal principal) {
 
-		User admin = (User)session.getAttribute("user");
+		User admin = this.userRepository.getUserByEmail(principal.getName());
 		model.addAttribute("admin", admin);
 	}
 	
 	@RequestMapping("/index")
 	private String index(Model model) {
 		
-//		User user = (User)session.getAttribute("user");
-//		user.setStatus(true);
-//		this.userRepository.save(user);
-//		session.setAttribute("user", user);
 		model.addAttribute("title", "Admin Dashboard");
 		duration = System.currentTimeMillis();
 		return "admin/index";
@@ -74,7 +69,6 @@ public class AdminController {
 //	}
 	
 	@GetMapping("/viewUsers/{page}")
-	@Cacheable(cacheNames = "users", key = "#page")
 	public String viewUsers(@PathVariable("page") Integer page, Model model) {
 
 		try {

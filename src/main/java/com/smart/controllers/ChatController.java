@@ -135,8 +135,8 @@ public class ChatController {
 	@GetMapping("/chatAdmin")
 	public String chatAdmin(Model model) {
 		
-		String ADMIN_EMAIL = System.getenv("ADMIN_EMAIL");
-		User user = this.userRepository.getUserByEmail(ADMIN_EMAIL);
+//		String ADMIN_EMAIL = System.getenv("ADMIN_EMAIL");
+		User user = this.userRepository.getUserByEmail("ssmartcontactmanager@gmail.com");
 		if(user==null) return "redirect:/user/index";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.getStatus());

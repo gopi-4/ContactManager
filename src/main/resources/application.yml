@@ -1,32 +1,33 @@
 server:
-#  port: 80
+  port: 80
   error:
     whitelabel:
       enabled: false
     path: /error
 spring:
+  application:
+    name: SCM
   datasource:
-    dbcp2:
-      driver-class-name: org.postgresql.Driver
-    name: ds
-    password: 3a96850bce20b9e12279643405c38fb5937edfc0fcdbcff08e44ba97a8c6f78a
-    url: jdbc:postgresql://ec2-52-72-56-59.compute-1.amazonaws.com:5432/d6kkccj2jivp4d
-    username: seqxhnqgbzewrl
+#    dbcp2:
+#      driver-class-name: org.postgresql.Driver
+#    name: ds
+#    url: jdbc:postgresql://ec2-52-72-56-59.compute-1.amazonaws.com:5432/d6kkccj2jivp4d
+#    username: seqxhnqgbzewrl
+#    password: 3a96850bce20b9e12279643405c38fb5937edfc0fcdbcff08e44ba97a8c6f78a
 #spring:
 #  datasource:
 #    dbcp2:
 #      driver-class-name: com.mysql.cj.jdbc.Driver
 #    name: ds
-#    password: root
-#    url: jdbc:mysql://localhost:8080/smartcontact?serverTimezone=UTC
-#    username: root
+    url: jdbc:mysql://localhost:8080/smartcontact?serverTimezone=UTC
+    username: root
+    password: root
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
 #      dialect: org.hibernate.dialect.MySQL8Dialect
-        
   servlet:
     multipart:
       max-file-size: 2MB
@@ -56,8 +57,8 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
-    username: ${ADMIN_EMAIL}
-    password: ${ADMIN_PASSWORD}
+    username: ssmartcontactmanager@gmail.com
+    password: qofvffvgrtmslaku
     port: 587
     protocol: smtp
     test-connection: false
