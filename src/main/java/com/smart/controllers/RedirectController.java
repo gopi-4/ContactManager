@@ -1,28 +1,23 @@
 package com.smart.controllers;
 
-import java.security.Principal;
-
+import com.smart.service.RedirectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.smart.dao.UserRepository;
-import com.smart.entities.User;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/check")
+@RequestMapping("/redirect")
 public class RedirectController {
 
 	@Autowired
-	private UserRepository userRepository;
-	
+	private RedirectService redirectService;
+
 	@RequestMapping("/")
-	private String where(Principal principal) {
-		User user = userRepository.getUserByEmail(principal.getName());
-		user.setStatus(true);
-		this.userRepository.save(user);
-		if(user.getRole().equals("ROLE_ADMIN")) return "redirect:/admin/index";
-		return "redirect:/user/index";
+	private String redirect(Principal principal, Model model) {
+		return redirectService.redirect(principal, model);
 	}
 	
 }

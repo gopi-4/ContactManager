@@ -1,78 +1,94 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-	th:replace="admin/base::Layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{admin/base::Layout(~{::section})}" xmlns="http://www.w3.org/1999/html">
 <head>
-<meta charset="UTF-8" />
-<title>Home - Smart Contact Manager</title>
+	<meta charset="UTF-8" />
+	<title>Home - Smart Contact Manager</title>
 </head>
 <body>
-	<section style="height: 110vh;" class="banner fixed">
-		<div class="card-4 mt-3" th:if="${admin}">
-			<div class="card-body">
-				<div class="container text-center">
-					<div th:if=${session.message} class="mt-2">
-						<div th:classappend="${'alert-'+session.message.type}"
-							class="alert alert-dismissible fade show" role="alert">
-							<strong th:text="${session.message.type+'!!'}"></strong> <span
-								th:text="${session.message.content}"></span>
-							<button type="button" class="btn-close" data-bs-dismiss="alert"
-								aria-label="Close"></button>
-						</div>
-						<th:block th:text="${#session.removeAttribute('message')}"></th:block>
-					</div>
-					<img src="" style="height: 200px; width: 200px"
-						class="profile-picture mt-3" th:src="@{'data:image/jpeg;base64,'+${admin.image}}"
-						alt="profile photo" />
-					<h3 class="mt-3">
-						<span th:text="${admin.name}"></span>
-					</h3>
-					<div class="table-responsive">
-						<table class="table text-white table-hover">
-							<!-- <thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">First</th>
-								<th scope="col">Last</th>
-								<th scope="col">Handle</th>
-							</tr>
-						</thead> -->
-							<tbody>
-								<tr>
-									<th scope="row">#ID</th>
-									<td>SCM2021<span th:text="${admin.Id}"></span></td>
-								</tr>
-								<tr>
-									<th scope="row">E-mail</th>
-									<td><span th:text="${admin.email}"></span></td>
-								</tr>
-								<tr>
-									<th scope="row">Role</th>
-									<td><span th:text="${admin.role}"></span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="container mt-3">
-						<th:block th:utext="${admin.about}"></th:block>
-					</div>
-					<div class="contianer mt-3">
-						<!-- <a th:onclick="|deleteUser(${user.Id})|"
-							class="btn btn-danger"><i class="fas fa-trash-alt"></i></a> -->
-						<!-- <a class="btn bg-primary"
-							th:href="@{'/user/updateUser/'+${admin.Id}}"><i
-							class="fas fa-pen-nib"></i></a> -->
+<section style="" class="">
+	<div id="container" class="container sign-in">
+		<!-- FORM SECTION -->
+		<div class="row">
+			<!-- DUMMY -->
+			<div class="col align-items-center flex-col sign-up">
+				<div class="form-wrapper align-items-center">
+					<div class="form sign-up">
+
 					</div>
 				</div>
 			</div>
+			<!-- END DUMMY -->
+			<!-- PROFILE -->
+			<div class="col align-items-center flex-col sign-in">
+				<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
+					<span class="text-center" th:text="${session.message.content}"></span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+				</div>
+				<div class="form-wrapper align-items-center">
+					<div class="form sign-in">
+						<form id="signin-form">
+							<!--top: -70px;-->
+							<div class="" style="align-items: center; position: relative;">
+								<img src="" style="width: 30%; height: 30%;" class="profile-picture" th:src="@{${admin.image.url}}" alt="profile photo"/>
+							</div>
+							<div class="input-group">
+								<i class='bx bx-id-card'></i>
+								<input type="text" id="Id" name="username" th:value="${admin.Id}" placeholder="Id" readonly>
+							</div>
+							<div class="input-group">
+								<i class='bx bxs-user'></i>
+								<input type="text" id="login_username" name="username" th:value="${admin.name}" placeholder="Username" readonly>
+							</div>
+							<div class="input-group">
+								<i class='bx bx-mail-send'></i>
+								<input type="email"  id="email" name="email" placeholder="Email" th:value="${admin.email}" readonly>
+							</div>
+							<div class="input-group">
+								<textarea style="width:100%;" placeholder="About" name="about" id="mytextarea" rows="5" th:value="${admin.about}" readonly></textarea>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- END PROFILE -->
 		</div>
-		<script>
-			$(document).ready(() =>{
-				$(".item").removeClass("active");
-				$("#profile").addClass("active");
-			});
-		</script>
-		<h1 class="text-center mt-4" th:unless="${admin}">Your are not
-			premitted here....</h1>
-	</section>
+		<!-- END FORM SECTION -->
+		<!-- CONTENT SECTION -->
+		<div class="row content-row">
+			<!-- PROFILE CONTENT -->
+			<div class="col align-items-center flex-col">
+				<div class="text sign-in">
+					<h2>
+						My Profile
+					</h2>
+				</div>
+				<div class="img sign-in">
+
+				</div>
+			</div>
+			<!-- END PROFILE CONTENT -->
+			<!-- DUMMY CONTENT -->
+			<div class="col align-items-center flex-col">
+				<div class="img sign-up">
+
+				</div>
+				<div class="text sign-up">
+					<h2>
+
+					</h2>
+				</div>
+			</div>
+			<!-- END DUMMY CONTENT -->
+		</div>
+		<!-- END CONTENT SECTION -->
+	</div>
+	<script>
+		$(document).ready(() =>{
+			$(".item").removeClass("active");
+			$("#profile").addClass("active");
+		});
+	</script>
+</section>
 </body>
 </html>

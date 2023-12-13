@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{default/base::Layout(~{::section})}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <title>Home - Smart Contact Manager</title>
+</head>
+<body>
+<section style="" class="">
+    <div id="container" class="container">
+        <!-- FORM SECTION -->
+        <div class="row">
+            <!-- SIGN UP -->
+            <div class="col align-items-center flex-col sign-up">
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-up">
+                        <form id="signup-form" action="#" th:action="@{/registration}" method="POST">
+                            <div class="input-group">
+                                <i class='bx bxs-user'></i>
+                                <input type="text" id="signup_username" name="username" placeholder="Username" required>
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bx-mail-send'></i>
+                                <input type="email" id="email_field" name="email" placeholder="Email" required>
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bxs-lock-alt'></i>
+                                <input type="password" id="password_field" name="password"  placeholder="Password" required>
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bxs-lock-alt'></i>
+                                <input type="password" id="confirm_password_field" name="confirm_password" placeholder="Confirm password" required onkeyup="validate_password()">
+                            </div>
+                            <span id="wrong_pass_alert"></span>
+                            <button id="signupbtn" type="submit">
+                                Sign up
+                            </button>
+                            <p>
+                                <span>
+                                    Already have an account?
+                                </span>
+                                <b onclick="toggle()" class="pointer">
+                                    Sign in here
+                                </b>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END SIGN UP -->
+            <!-- SIGN IN -->
+            <div class="col align-items-center flex-col sign-in">
+                <div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
+                    <span class="text-center" th:text="${session.message.content}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+                </div>
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-in">
+                        <form id="signin-form" action="#" th:action="@{/login}" method="post">
+                            <div class="input-group">
+                                <i class='bx bxs-user'></i>
+                                <input type="text" id="login_username" name="username" placeholder="Username">
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bxs-lock-alt'></i>
+                                <input type="password" id="password" name="password" placeholder="Password" required>
+                            </div>
+                            <div class="line"></div>
+                            <div class="d-flex" style="justify-content:space-around; margin-bottom:10px;">
+                                <div class="personal-social-icon">
+                                    <a href="#" th:href="@{/oauth2/authorization/facebook}"><img class="personal-social-logo" src="#" th:src="@{/images/flat-icon/facebook.png}"></a>
+                                </div>
+                                <div class="personal-social-icon">
+                                    <a href="#" th:href="@{/oauth2/authorization/google}"><img class="personal-social-logo" src="#" th:src="@{/images/flat-icon/google.png}"></a>
+                                </div>
+                                <div class="personal-social-icon">
+                                    <a href="#" th:href="@{/oauth2/authorization/github}"><img class="personal-social-logo" src="#" th:src="@{/images/flat-icon/github.png}"></a>
+                                </div>
+                            </div>
+                            <p th:if="${param.error}" style="color:red;" class="alert mt-2 text-center">☒ Invalid Username and Password.</p>
+                            <p th:if="${param.logout}" class="alert mt-2 text-center">☒ Successfully SignOut.</p>
+                            <p th:if="${param.change}" class="alert mt-2 text-center" th:text="${param.change}"></p>
+                            <button type="submit">
+                                Sign in
+                            </button>
+                            <p>
+                                <b>
+                                    <a th:href="@{/forgotPassword}">Forgot password?</a>
+                                </b>
+                            </p>
+                            <p>
+                                <span>
+                                    Don't have an account?
+                                </span>
+                                <b onclick="toggle()" class="pointer">
+                                    Sign up here
+                                </b>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END SIGN IN -->
+        </div>
+        <!-- END FORM SECTION -->
+        <!-- CONTENT SECTION -->
+        <div class="row content-row">
+            <!-- SIGN IN CONTENT -->
+            <div class="col align-items-center flex-col">
+                <div class="text sign-in">
+                    <h2>
+                        Welcome
+                    </h2>
+
+                </div>
+                <div class="img sign-in">
+
+                </div>
+            </div>
+            <!-- END SIGN IN CONTENT -->
+            <!-- SIGN UP CONTENT -->
+            <div class="col align-items-center flex-col">
+                <div class="img sign-up">
+
+                </div>
+                <div class="text sign-up">
+                    <h2>
+                        Join with us
+                    </h2>
+
+                </div>
+            </div>
+            <!-- END SIGN UP CONTENT -->
+        </div>
+        <!-- END CONTENT SECTION -->
+    </div>
+</section>
+</body>
+</html>

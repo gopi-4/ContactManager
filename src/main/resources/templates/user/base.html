@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:fragment="Layout(content)">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+
+<!--Bootsrap 4 CDN-->
+<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+
+<!--Fontawesome CDN-->
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"> -->
+
+<!-- FontAwesome CSS -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet"
+	  href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+	  integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+	  crossorigin="anonymous">
+
+<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/authentication.css}" />
+<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/footer.css}" />
+<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/contacts-slider.css}" />
+<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/search.css}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+
+<!--BOX-ICON-->
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+<title th:text="${title}">Smart Contact Manager</title>
+</head>
+
+<body onload="show()">
+
+	<div id="preloader"></div>
+
+	<!-- navbar -->
+	<nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<span onclick="toggleSidebar()"><i style="font-size: 32px;" class='text-white bx bxl-unity hover'></i></span>
+			<div class="navbar-brand" style="height: 40px;"><p style="margin-left: 5px;">Smart Contact Manager</p></div>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" th:href="@{/user/index}">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/user/profile}"><span th:text="${user.name}"></span></a></li>
+					<li class="nav-item"><a class="nav-link" th:target="_blank" th:href="@{/chat/chatAdmin}"><i class="fa-solid fa-bell"></i></a></li>
+				</ul>
+
+			</div>
+		</div>
+	</nav>
+	<!-- navbar ends -->
+
+	<div class="sidebar">
+
+		<a id="home" th:href="@{/user/index}" class="item" style="margin-bottom:2px;"><i class='bx bx-home' style="font-size:24px; margin-right:10px;"></i>Home</a>
+		<a id="viewContacts" th:href="@{/user/viewContacts/0}" class="item" style="margin-bottom:2px;"><i class='bx bxs-contact' style="font-size:24px; margin-right:10px;"></i>View Contacts</a>
+		<a id="addContact" th:href="@{/user/addContact}" class="item" style="margin-bottom:2px;"><i class='bx bx-add-to-queue' style="font-size:24px; margin-right:10px;"></i>Add Contact</a>
+		<a id="profile" th:href="@{/user/profile}" class="item" style="margin-bottom:2px;"><i class='bx bx-user' style="font-size:24px; margin-right:10px;"></i>Your Profile</a>
+		<a th:href="@{/user/signOut}" class="item" style="margin-bottom:2px;"><i class='bx bx-log-out' style="font-size:24px; margin-right:10px;"></i>Logout</a>
+		<div class="divider"></div>
+
+	</div>
+
+	<div class="content mt-5">
+		<div th:replace="${content}"></div>
+	</div>
+
+	<!-- Optional JavaScript; choose one of the two! -->
+
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+			crossorigin="anonymous"></script>
+	
+		<!-- Option 2: Separate Popper and Bootstrap JS -->
+		<!--
+	    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+	    -->
+
+	<script>
+		var preloader = document.getElementById('preloader');
+		function show(){
+			preloader.style.display = 'none';
+		}
+	</script>
+	<script>
+		const toggleSidebar = () => {
+			if($(".sidebar").is(":visible")){
+				$(".sidebar").css("display","none");
+				$(".banner").css("margin-left","0%");
+				$(".banner").css("width","100%");
+			}else{
+				$(".sidebar").css("display","block");
+			}
+		};
+	</script>
+	<script>
+		const beforeUnloadHandler = (event) => {
+		  // Recommended
+		  event.preventDefault();
+		  console.log(event);
+		  // Included for legacy support, e.g. Chrome/Edge < 119
+		  event.returnValue = true;
+		};
+		window.addEventListener("beforeunload", beforeUnloadHandler);
+	</script>
+</body>
+
+<!-- Footer -->
+<footer class="footer">
+	<div class="waves">
+		<div class="wave" id="wave1"></div>
+		<div class="wave" id="wave2"></div>
+		<div class="wave" id="wave3"></div>
+		<div class="wave" id="wave4"></div>
+	</div>
+	<ul class="social-icon">
+		<li class="social-icon__item"><a class="social-icon__link" href="#">
+			<ion-icon name="logo-facebook"></ion-icon>
+		</a></li>
+		<li class="social-icon__item"><a class="social-icon__link" href="#">
+			<ion-icon name="logo-twitter"></ion-icon>
+		</a></li>
+		<li class="social-icon__item"><a class="social-icon__link" href="#">
+			<ion-icon name="logo-linkedin"></ion-icon>
+		</a></li>
+		<li class="social-icon__item"><a class="social-icon__link" href="#">
+			<ion-icon name="logo-instagram"></ion-icon>
+		</a></li>
+	</ul>
+	<ul class="menu">
+		<li class="menu__item"><a class="menu__link" href="#">Home</a></li>
+		<li class="menu__item"><a class="menu__link" href="#">About</a></li>
+		<li class="menu__item"><a class="menu__link" href="#">Services</a></li>
+		<li class="menu__item"><a class="menu__link" href="#">Team</a></li>
+		<li class="menu__item"><a class="menu__link" href="#">Contact</a></li>
+
+	</ul>
+	<div class="footer-copyright text-center py-3">
+		<p>&copy;2023 Ganesh Kalyankar | All Rights Reserved</p>
+		<form>
+			<script src="https://checkout.razorpay.com/v1/payment-button.js"
+					data-payment_button_id="pl_J1184kAuoXX9yl" async> </script>
+		</form>
+	</div>
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<!-- END Footer -->
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{user/base::Layout(~{::section})}">>
+<head>
+<meta charset="UTF-8" />
+<title>Home - Smart Contact Manager</title>
+</head>
+<body>
+	<section style="height: 100vh; display: flex; justify-content: flex-end;" class="">
+		<div id="container" class="container sign-in">
+			<div class="row">
+				<!-- DUMMY -->
+				<div class="col align-items-center flex-col sign-up">
+					<div class="form-wrapper align-items-center">
+						<div class="form sign-up">
+
+						</div>
+					</div>
+				</div>
+				<!-- END DUMMY -->
+				<!-- CONTACT LIST -->
+				<div class="col align-items-center flex-col sign-in">
+					<div th:if=${session.message}>
+						<div th:classappend="${'alert-'+session.message.type}" class="alert alert-dismissible fade show text-center" role="alert">
+							<span th:text="${session.message.content}"></span>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+						<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+					</div>
+					<div class="contact-wrapper">
+						<div class="contact-outer">
+							<div class="contact-card" th:each="c, iStat: ${contacts}" th:style="${iStat.index <= 2} ? '--delay:' + (${iStat.index-1}) + ';' : '--delay:2;'">
+								<div class="contact-content">
+									<div class="contact-img"><img src="#" th:src="@{${c.image.url}}" alt=""></div>
+									<div class="contact-details">
+										<span class="contact-name" style="font-family: monaco; font-weight: 80; font-size: 16px;" th:text="${c.name}"></span><br/>
+										<span class="contact-email" style="font-family: monaco; font-weight: 50; font-size: 12px;" th:text="${c.email}"></span><br/>
+										<span class="contact-phone" style="font-family: monaco; font-weight: 10; font-size: 10px;" th:text="${c.phone}"></span>
+									</div>
+								</div>
+								<div>
+									<div style="display: flex; justify-content: space-between;">
+										<span class="contact-status" style="font-family: monaco; font-weight: 80; font-size: 22px;" th:text="${c.status} ? 'Online' : 'Offline'"></span>
+										<span><a class="btn" th:href="@{'/user/updateContact/'+${c.Id}+'/'+${currentPage}}"><i class='bx bx-edit' style="font-size: 22px;"></i></a></span>
+									</div>
+									<div style="display: flex; justify-content: space-between;">
+										<span><a th:if="${c.isRegister}" class="btn" th:target="_blank" th:href="@{'/chat/'+${c.Id}}"><i class='bx bx-chat' style="font-size: 22px;"></i></a></span>
+										<span><a th:if="${not c.isRegister}" class="btn" th:href="@{'/user/invite/'+${user.name}+'/'+${c.Id}}+'/'+${currentPage}"><i class='bx bxl-telegram' style="font-size: 22px;"></i></a></span>
+										<span><a class="btn" th:onclick="|deleteContact(${c.Id})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div th:if="${totalPages != -1}" style="position: relative;">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination" th:if="${totalPages>=0}">
+								<li th:if="${currentPage != 0}" class="page-item">
+									<a class="page-link bg-primary" href="#" th:href="@{'/user/viewContacts/'+${currentPage-1}}">
+										<span class="text-black">Previous</span>
+									</a>
+								</li>
+								<li th:each="i : ${#numbers.sequence(1, totalPages+1)}" th:classappend=" ${currentPage==i-1} ? 'active' : '' " class="page-item">
+									<a th:classappend=" ${currentPage==i-1} ? 'bg-primary' : '' " class="page-link" href="#" th:href="@{'/user/viewContacts/'+${i-1}}">
+										<span th:text="${i}"></span>
+									</a>
+								</li>
+								<li th:if="${currentPage != totalPages}" class="page-item">
+									<a class="page-link bg-primary" href="#" th:href="@{'/user/viewContacts/'+${currentPage+1}}">
+										<span class="text-black">Next</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+				<!-- END CONTACT LIST-->
+			</div>
+			<div class="row content-row">
+				<!-- CONTACT CONTENT -->
+				<div class="col align-items-center flex-col">
+					<div class="img sign-in">
+
+					</div>
+					<div class="text sign-in">
+						<h2>
+							My Contact's
+						</h2>
+					</div>
+				</div>
+				<!-- END CONTACT CONTENT -->
+				<!-- DUMMY -->
+				<div class="col align-items-center flex-col">
+					<div class="text sign-up">
+
+					</div>
+					<div class="img sign-up">
+
+					</div>
+				</div>
+				<!-- END DUMMY -->
+			</div>
+		</div>
+		<form class="search-form" th:action="@{/search/contact/0}" method="get">
+			<div class="search-box">
+				<input id="search-input" name="search-input" type="text" placeholder="search...">
+				<a href="#">
+					<i class="fas fa-search"></i>
+				</a>
+			</div>
+			<button type="submit" style="display: none;" id="search-btn"></button>
+		</form>
+
+		<script>
+			let loginForm = document.getElementsByClassName("search-form");
+			loginForm.addEventListener("keypress", (e) => {
+				if (event.key === "Enter") {
+					e.preventDefault();
+					document.getElementById("search-btn").click();
+				}
+			});
+		</script>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#viewContacts").addClass("active");
+			});
+		</script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script>
+			function deleteContact(Id){
+				swal({
+					  title: "Are you sure?",
+					  text: "Once deleted, you will not be able to recover this contact!",
+					  icon: "warning",
+					  buttons: true,
+					  dangerMode: true,
+					})
+					.then((willDelete) => {
+					  if (willDelete) {
+					      window.location="/user/delete/"+Id;
+						  /* swal("Poof! Your imaginary file has been deleted!", {
+					      icon: "success",
+					    }); */
+					  } else {
+					    swal("Your contact is safe!!");
+					  }
+					});
+			}
+		</script>
+		<script>
+			const clearInput = () => {
+			  const input = document.getElementsByTagName("input")[0];
+			  input.value = "";
+			}
+
+			const clearBtn = document.getElementById("clear-btn");
+			clearBtn.addEventListener("click", clearInput);
+		</script>
+	</section>
+</body>
+</html>

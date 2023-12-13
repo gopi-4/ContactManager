@@ -1,64 +1,51 @@
 package com.smart.oauth2;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.smart.entities.User;
+import com.smart.enums.AuthenticationProvider;
+import com.smart.enums.Role;
+import com.smart.repository.UserRepository;
+import com.smart.service.ImageService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 
-import com.smart.dao.ContactRepository;
-import com.smart.dao.UserRepository;
-import com.smart.entities.AuthenticationProvider;
-import com.smart.entities.Contact;
-import com.smart.entities.User;
+import java.io.IOException;
+import java.util.Date;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired 
-	private ContactRepository contactRepository;
+	@Autowired
+	private ImageService imageService;
 	
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess(HttpServletRequest request,
+										HttpServletResponse response,
+										Authentication authentication) throws IOException, ServletException {
 
 		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 		String emailString = oAuth2User.getName();
 		String nameString = oAuth2User.getFullName();
 		String authProvider = oAuth2User.getAuthProvider();
-//		System.out.println(emailString);
-		User user = this.userRepository.getUserByEmail(emailString);
+		User user = userRepository.getUserByEmail(emailString).orElse(null);
+
 		if(user==null) {
-			//Register newUser
-			System.out.println("user is null");
+
 			User newUser = new User();
 			newUser.setName(nameString);
 			newUser.setEmail(emailString);
 			newUser.setPassword(nameString+"+"+emailString);
-			newUser.setRole("ROLE_USER");
-//			newUser.setImage("default.jpg");
-			FileInputStream fileInputStream = new FileInputStream("src/main/resources/static/images/default.jpg");
-			newUser.setImage(Base64Utils.encodeToString(fileInputStream.readAllBytes()));
-			fileInputStream.close();
-			newUser.setAbout("");
+			newUser.setRole(Role.ROLE_USER);
 			newUser.setEnabled(true);
-			newUser.setCoins(100);
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-			LocalDateTime now = LocalDateTime.now();
-			newUser.setDate(dtf.format(now));
 			newUser.setStatus(false);
+			newUser.setDate(new Date().toString());
+			newUser.setImage(imageService.getDefault());
 			
 			if (authProvider.equals("Facebook")) {
 				newUser.setAuthProvider(AuthenticationProvider.FACEBOOK);
@@ -69,14 +56,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			}
 			
 			this.userRepository.save(newUser);
-			
-			Contact contact = this.contactRepository.getContactByEmail(emailString);
-			if (contact!=null) {
-				contact.setUnique_id(newUser.getId());
-				this.contactRepository.save(contact);
-			}
-			
-//			response.sendRedirect("signup?username+"nameString+"&email="+emaiString+"+&authprovider="+AuthenticationProvider.FACEBOOK);
+			logger.info("New User Created.");
 		}else {
 			if (authProvider.equals("Facebook")) {
 				user.setAuthProvider(AuthenticationProvider.FACEBOOK);
@@ -87,10 +67,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			}
 			user.setStatus(true);
 			this.userRepository.save(user);
+			logger.info("User Exists.");
 		}
-		
-		//login with new User
-		response.sendRedirect("/check/");
+
+		response.sendRedirect("/redirect/");
 		super.onAuthenticationSuccess(request, response, authentication);
 	}
 

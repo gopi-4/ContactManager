@@ -1,97 +1,158 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org"
-	th:replace="admin/base::Layout(~{::section})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{admin/base::Layout(~{::section})}">>
 <head>
-<meta charset="UTF-8" />
-<title>All Users</title>
+	<meta charset="UTF-8" />
+	<title>Home - Smart Contact Manager</title>
 </head>
 <body>
-	<section style="height: 110vh;" class="banner">
-		<div class="card-3" th:if="${users}">
-			<div class="card-body">
-				<div th:if=${session.message}>
-					<div th:classappend="${'alert-'+session.message.type}"
-						class="alert alert-dismissible fade show" role="alert">
-						<strong th:text="${session.message.type+'!!'}"></strong> <span
-							th:text="${session.message.content}"></span>
-						<button type="button" class="btn-close" data-bs-dismiss="alert"
-							aria-label="Close"></button>
-					</div>
-					<th:block th:text="${#session.removeAttribute('message')}"></th:block>
-				</div>
-				<div class="table-responsive">
-					<!-- Search -->
-					<div class="search-container my-4 right">
-						<input onkeyup="search()" id="search-input" type="text"
-							class="form-control transparent text-white" placeholder="Search" />
-						<div class="search-result"></div>
-					</div>
-					<table class="table text-white">
-						<thead>
-							<tr>
-								<th scope="col">#ID</th>
-								<th scope="col">Name</th>
-								<th scope="col">E-mail</th>
-								<th scope="col">Status</th>
-								<th scope="col">Activation</th>
-								<th scope="col">Message</th>
-							</tr>
-						</thead>
-						<tbody>
+<section style="height: 100vh; display: flex; justify-content: flex-end;" class="">
+	<div id="container" class="container sign-in">
+		<div class="row">
+			<!-- DUMMY -->
+			<div class="col align-items-center flex-col sign-up">
+				<div class="form-wrapper align-items-center">
+					<div class="form sign-up">
 
-							<tr th:each="u : ${users}">
-								<th scope="row" th:text="SCM2021+${u.Id}"></th>
-								<td><img src="" class="profile-picture"
-									th:src="@{'data:image/jpeg;base64,'+${u.image}}" alt="profile photo"><span th:text="${u.name}"></span>
-								</td>
-								<td><a href="" th:href="@{'/admin/user/'+${u.Id}}">
-										<span th:text="${u.email}"></span></a>
-								</td>
-								<td>
-									<span th:text="${u.status}?'Online':'Offline'"></span>
-								</td>
-								<td>
-									<span th:text="${u.enabled}?'ACTIVE':'DEACTIVE'"></span>
-								</td>
-								<td><!-- <a href="#" th:onclick="|deleteUser(${u.Id})|" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a> --> 
-									<!-- <a class="btn bg-primary" th:href="@{'/admin/updateUser/'+${u.Id}}"><i class="fas fa-pen-nib"></i></a> --> 
-									<a class="btn bg-warning" th:target="_blank" th:href="@{'/chat/admin/'+${u.Id}}"><i class="fa-regular fa-envelope"></i></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					</div>
 				</div>
-				<div th:if="${totalPages != -1}">
+			</div>
+			<!-- END DUMMY -->
+			<!-- CONTACT LIST -->
+			<div class="col align-items-center flex-col sign-in">
+				<div th:if=${session.message}>
+					<div th:classappend="${'alert-'+session.message.type}" class="alert alert-dismissible fade show text-center" role="alert">
+						<span th:text="${session.message.content}"></span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+				</div>
+				<div class="contact-wrapper">
+					<div class="contact-outer">
+						<div class="contact-card" th:each="c, iStat: ${users}" th:style="${iStat.index <= 2} ? '--delay:' + (${iStat.index-1}) + ';' : '--delay:2;'">
+							<div class="contact-content">
+								<div class="contact-img"><img src="#" th:src="@{${c.image.url}}" alt=""></div>
+								<div class="contact-details">
+									<span class="contact-name" style="font-family: monaco; font-weight: 80; font-size: 16px;" th:text="${c.name}"></span><br/>
+									<span class="contact-email" style="font-family: monaco; font-weight: 50; font-size: 12px;" th:text="${c.email}"></span><br/>
+									<br/>
+								</div>
+							</div>
+							<div>
+								<div style="display: flex; justify-content: space-between;">
+									<span class="contact-status" style="font-family: monaco; font-weight: 80; font-size: 22px;" th:text="${c.status} ? 'Online' : 'Offline'"></span>
+								</div>
+								<div style="display: flex; justify-content: space-between;">
+									<span><a class="btn" th:target="_blank" th:href="@{'/chat/admin/'+${c.Id}}"><i class='bx bx-chat' style="font-size: 22px;"></i></a></span>
+									<span><a class="btn" th:onclick="|deleteUser(${c.Id})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div th:if="${totalPages != -1}" style="position: relative;">
 					<nav aria-label="Page navigation example">
-						<ul class="pagination">
-							<li th:if="${currentPage != 0}" class="page-item"><a
-								class="page-link bg-primary" href="#"
-								th:href="@{'/admin/viewUsers/'+${currentPage-1}}"><span
-									class="text-black">Previous</span></a></li>
-							<li th:each="i : ${#numbers.sequence(1, totalPages+1)}"
-								th:classappend=" ${currentPage==i-1} ? 'active' : '' "
-								class="page-item"><a
-								th:classappend=" ${currentPage==i-1} ? 'bg-primary' : '' "
-								class="page-link" href="#"
-								th:href="@{'/admin/viewUsers/'+${i-1}}"><span
-									th:text="${i}"></span></a></li>
-							<li th:if="${currentPage+1 != totalPages+1}" class="page-item"><a
-								class="page-link bg-primary" href="#"
-								th:href="@{'/admin/viewUsers/'+${currentPage+1}}"><span
-									class="text-black">Next</span></a></li>
+						<ul class="pagination" th:if="${totalPages>=0}">
+							<li th:if="${currentPage != 0}" class="page-item">
+								<a class="page-link bg-primary" href="#" th:href="@{'/admin/viewUsers/'+${currentPage-1}}">
+									<span class="text-black">Previous</span>
+								</a>
+							</li>
+							<li th:each="i : ${#numbers.sequence(1, totalPages+1)}" th:classappend=" ${currentPage==i-1} ? 'active' : '' " class="page-item">
+								<a th:classappend=" ${currentPage==i-1} ? 'bg-primary' : '' " class="page-link" href="#" th:href="@{'/admin/viewUsers/'+${i-1}}">
+									<span th:text="${i}"></span>
+								</a>
+							</li>
+							<li th:if="${currentPage+1 != totalPages+1}" class="page-item">
+								<a class="page-link bg-primary" href="#" th:href="@{'/admin/viewUsers/'+${currentPage+1}}">
+									<span class="text-black">Next</span>
+								</a>
+							</li>
 						</ul>
 					</nav>
 				</div>
 			</div>
+			<!-- END CONTACT LIST-->
 		</div>
-		<script>
-			$(document).ready(() =>{
-				$(".item").removeClass("active");
-				$("#viewContacts").addClass("active");
-			});
-		</script>
-		<h1 class="text-center mt-4" th:unless="${users}">Your are not
-			premitted here....</h1>
-	</section>
+		<div class="row content-row">
+			<!-- CONTACT CONTENT -->
+			<div class="col align-items-center flex-col">
+				<div class="img sign-in">
+
+				</div>
+				<div class="text sign-in">
+					<h2>
+						My Contact's
+					</h2>
+				</div>
+			</div>
+			<!-- END CONTACT CONTENT -->
+			<!-- DUMMY -->
+			<div class="col align-items-center flex-col">
+				<div class="text sign-up">
+
+				</div>
+				<div class="img sign-up">
+
+				</div>
+			</div>
+			<!-- END DUMMY -->
+		</div>
+	</div>
+	<form class="search-form" th:action="@{/search/contact/0}" method="get">
+		<div class="search-box">
+			<input id="search-input" name="search-input" type="text" placeholder="search...">
+			<a href="#">
+				<i class="fas fa-search"></i>
+			</a>
+		</div>
+		<button type="submit" style="display: none;" id="search-btn"></button>
+	</form>
+
+	<script>
+		let loginForm = document.getElementsByClassName("search-form");
+		loginForm.addEventListener("keypress", (e) => {
+			if (event.key === "Enter") {
+				e.preventDefault();
+				document.getElementById("search-btn").click();
+			}
+		});
+	</script>
+	<script>
+		$(document).ready(() =>{
+			$(".item").removeClass("active");
+			$("#viewContacts").addClass("active");
+		});
+	</script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script>
+		function deleteUser(Id){
+			swal({
+				  title: "Are you sure?",
+				  text: "Once deleted, you will not be able to recover this contact!",
+				  icon: "warning",
+				  buttons: true,
+				  dangerMode: true,
+				})
+				.then((willDelete) => {
+				  if (willDelete) {
+					  window.location="/admin/deleteUser/"+Id;
+					  /* swal("Poof! Your imaginary file has been deleted!", {
+					  icon: "success",
+					}); */
+				  } else {
+					swal("Your contact is safe!!");
+				  }
+				});
+		}
+	</script>
+	<script>
+		const clearInput = () => {
+		  const input = document.getElementsByTagName("input")[0];
+		  input.value = "";
+		}
+		const clearBtn = document.getElementById("clear-btn");
+		clearBtn.addEventListener("click", clearInput);
+	</script>
+</section>
 </body>
 </html>

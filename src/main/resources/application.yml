@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8585
   error:
     whitelabel:
       enabled: false
@@ -8,26 +8,19 @@ spring:
   application:
     name: SCM
   datasource:
-#    dbcp2:
-#      driver-class-name: org.postgresql.Driver
-#    name: ds
-#    url: jdbc:postgresql://ec2-52-72-56-59.compute-1.amazonaws.com:5432/d6kkccj2jivp4d
-#    username: seqxhnqgbzewrl
-#    password: 3a96850bce20b9e12279643405c38fb5937edfc0fcdbcff08e44ba97a8c6f78a
-#spring:
-#  datasource:
-#    dbcp2:
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#    name: ds
-    url: jdbc:mysql://localhost:8080/smartcontact?serverTimezone=UTC
-    username: root
-    password: root
+    driver-class-name: org.postgresql.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:8080/contactManager?serverTimezone=UTC
+#    username: root
+#    password: root
+    url: jdbc:postgresql://ep-black-snowflake-30567558.us-east-2.aws.neon.tech/ContactManager_DB
+    username: gkalyankar33
+    password: 1dPanL2MHkqB
   jpa:
     hibernate:
       ddl-auto: update
-#    properties:
-#      dialect: org.hibernate.dialect.PostgreSQLDialect
-#      dialect: org.hibernate.dialect.MySQL8Dialect
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   servlet:
     multipart:
       max-file-size: 2MB
@@ -68,3 +61,6 @@ spring:
           auth: true
           starttls:
             enable: true
+#  web:
+#    resources:
+#      static-locations: C:\Projects\IdeaProjects\SPRING_BOOT\ContactManager\src\main\resources\static

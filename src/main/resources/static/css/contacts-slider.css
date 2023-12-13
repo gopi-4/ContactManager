@@ -1,0 +1,87 @@
+.contact-wrapper .contact-outer{
+  display: flex;
+  align-items: center;
+  /*justify-content: center;*/
+}
+.contact-wrapper .contact-card{
+  background: #fff;
+  width: 430px;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  justify-content: space-between;
+  border-radius: 100px 20px 20px 100px;
+  box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+  animation: contact-animate 15s linear infinite;
+  animation-delay: calc(3s * var(--delay));
+}
+
+.contact-wrapper {
+    margin-right:400px;
+    margin-top: 250px;
+    height: 200px;
+}
+.contact-outer:hover .contact-card{
+  animation-play-state: paused;
+}
+.contact-wrapper .contact-card:last-child{
+  animation-delay: calc(-3s * var(--delay));
+}
+@keyframes contact-animate {
+  0%{
+    opacity: 0;
+    transform: translateY(100%) scale(0.5);
+  }
+  5%, 20%{
+    opacity: 0.4;
+    transform: translateY(100%) scale(0.7);
+  }
+  25%, 40%{
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0%) scale(1);
+  }
+  45%, 60%{
+    opacity: 0.4;
+    transform: translateY(-100%) scale(0.7);
+  }
+  65%, 100%{
+    opacity: 0;
+    transform: translateY(-100%) scale(0.5);
+  }
+}
+.contact-card {
+  display: flex;
+  align-items: center;
+}
+.contact-wrapper .contact-card .contact-img{
+  height: 90px;
+  width: 90px;
+  position: absolute;
+  left: -5px;
+  background: #fff;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+}
+.contact-card .contact-img img{
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.contact-card {
+  margin-left: 80px;
+}
+
+.contact-details {
+    margin-left: 80px;
+    text-align: left;
+}
+
+.contact-card a:hover{
+  transform: scale(0.94);
+}
