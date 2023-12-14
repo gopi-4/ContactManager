@@ -1,6 +1,5 @@
 package com.smart.service;
 
-import com.smart.email.EmailService;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
 import com.smart.helpers.Message;
@@ -188,9 +187,8 @@ public class UserService {
 				session.setAttribute("message", new Message("Contact not Exist..", "danger"));
 				model.addAttribute("title", "View Contacts");
 			}else {
-				
-				String subject = "Invite : Smart Contact Manager";
-				String message = username+" invites you to : https://scm-v1.herokuapp.com/";
+				String subject = "Invite : Contact Manager";
+				String message = username+" invites you to : https://contactmanager-3c3x.onrender.com/";
 				String to = contact.getEmail();
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {
@@ -201,7 +199,6 @@ public class UserService {
 					model.addAttribute("title", "View Contacts");
 				}
 			}
-			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			session.setAttribute("message", new Message("Error Sending Invite..", "danger"));

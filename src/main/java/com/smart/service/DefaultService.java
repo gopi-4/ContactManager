@@ -1,6 +1,5 @@
 package com.smart.service;
 
-import com.smart.email.EmailService;
 import com.smart.entities.User;
 import com.smart.enums.AuthenticationProvider;
 import com.smart.enums.Role;
