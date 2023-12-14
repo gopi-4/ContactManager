@@ -13,7 +13,7 @@
     	<section class="chat-area">
     		<header>
     			<!-- <a th:href="@{/user/view_contacts/0}" class="back-icon"><i class="fas fa-arrow-left"></i></a> -->
-			        <img src="" th:src="@{${c.image.url}}"  alt="">
+			        <img src="" th:src="@{${contact.image.url}}"  alt="">
 			        <div class="details">
 			          <span th:text="${contact.name}"></span>
 			          <p th:text="${contact.status}?'Online':''"></p>

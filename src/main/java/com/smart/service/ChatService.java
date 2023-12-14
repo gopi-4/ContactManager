@@ -36,7 +36,7 @@ public class ChatService {
 		if(contact==null) return "redirect:/user/viewContacts/0";
 		model.addAttribute("contact", contact);
 		model.addAttribute("status", Objects.requireNonNull(this.userRepository.getUserByEmail(contact.getEmail()).orElse(null)).isStatus());
-		return "chat";
+		return "default/chat";
 	}
 
 	public ResponseEntity<Optional<String>> getChat(Integer incoming, Principal principal){
@@ -51,7 +51,7 @@ public class ChatService {
 		if(messages.size()>0) {
 			for (Messages message : messages) {
 				if (message.getOutgoing() == outgoing) {
-					sb.append("<div class" + "=chat-outgoing" + "><div class=" + "details" + "><p>").append(message.getMsg()).append("</p></div></div>");
+					sb.append("<div class=chat-outgoing><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				} else {
 					sb.append("<div class=chat-incoming><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				}
@@ -93,7 +93,7 @@ public class ChatService {
 		if(messages.size()>0) {
 			for (Messages message : messages) {
 				if (message.getOutgoing() == outgoing) {
-					sb.append("<div class" + "=chat-outgoing" + "><div class=" + "details" + "><p>").append(message.getMsg()).append("</p></div></div>");
+					sb.append("<div class=chat-outgoing><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				} else {
 					sb.append("<div class=chat-incoming><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				}

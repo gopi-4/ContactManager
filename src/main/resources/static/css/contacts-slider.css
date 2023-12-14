@@ -3,6 +3,7 @@
   align-items: center;
   /*justify-content: center;*/
 }
+
 .contact-wrapper .contact-card{
   background: #fff;
   width: 430px;
@@ -16,7 +17,7 @@
   border-radius: 100px 20px 20px 100px;
   box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
   animation: contact-animate 15s linear infinite;
-  animation-delay: calc(3s * var(--delay));
+  animation-delay: calc(1s * var(--delay));
 }
 
 .contact-wrapper {
@@ -24,12 +25,15 @@
     margin-top: 250px;
     height: 200px;
 }
+
 .contact-outer:hover .contact-card{
   animation-play-state: paused;
 }
+
 .contact-wrapper .contact-card:last-child{
   animation-delay: calc(-3s * var(--delay));
 }
+
 @keyframes contact-animate {
   0%{
     opacity: 0;

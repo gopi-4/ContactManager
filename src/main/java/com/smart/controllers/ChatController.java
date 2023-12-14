@@ -4,6 +4,8 @@ import com.smart.entities.Messages;
 import com.smart.entities.User;
 import com.smart.repository.UserRepository;
 import com.smart.service.ChatService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
-	
+
+	private final Logger logger = LogManager.getLogger(ChatController.class);
 	@Autowired
 	private ChatService chatService;
 
@@ -25,8 +28,13 @@ public class ChatController {
 
 	@ModelAttribute
 	private void addCommonData(Model model, Principal principal) {
-		User admin = userRepository.getUserByEmail(principal.getName()).orElse(null);
-		model.addAttribute("admin", admin);
+		try {
+			User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
+			model.addAttribute("admin", user);
+			model.addAttribute("user", user);
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
 	
 	@GetMapping("/{contactId}")
@@ -37,7 +45,6 @@ public class ChatController {
 	@PostMapping("/getChat")
 	public ResponseEntity<Optional<String>> getChat(@RequestParam("incoming") Integer incoming, Principal principal){
 		return chatService.getChat(incoming, principal);
-		
 	}
 	
 	@PostMapping("/insertChat")
@@ -53,7 +60,6 @@ public class ChatController {
 	@PostMapping("/admin/getChat")
 	public ResponseEntity<Optional<String>> adminGetChat(@RequestParam("incoming") Integer incoming, Principal principal){
 		return chatService.adminGetChat(incoming, principal);
-		
 	}
 	
 	@PostMapping("/admin/insertChat")
