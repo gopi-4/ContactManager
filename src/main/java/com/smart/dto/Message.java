@@ -1,4 +1,4 @@
-package com.smart.helpers;
+package com.smart.dto;
 
 public class Message {
 	

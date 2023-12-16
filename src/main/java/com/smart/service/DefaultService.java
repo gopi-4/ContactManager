@@ -1,14 +1,16 @@
 package com.smart.service;
 
+import com.smart.dto.Message;
 import com.smart.entities.User;
 import com.smart.enums.AuthenticationProvider;
 import com.smart.enums.Role;
-import com.smart.helpers.Message;
 import com.smart.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -21,13 +23,10 @@ public class DefaultService {
 	private final Logger logger = LogManager.getLogger(DefaultService.class);
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-
 	@Autowired
 	private EmailService emailService;
-
 	@Autowired
 	private ImageService imageService;
 
@@ -112,6 +111,20 @@ public class DefaultService {
 			model.addAttribute("title", "OTP");
 			session.setAttribute("message", new Message("Wrong OTP!!", "danger"));
 			return "default/otp";
+		}
+	}
+
+	public ResponseEntity<Boolean> logout(Integer userId) {
+		try {
+			User user = this.userRepository.findById(userId).orElse(null);
+			assert user != null;
+			user.setStatus(false);
+			user.setDate(new Date().toString());
+			this.userRepository.save(user);
+			return ResponseEntity.status(HttpStatus.OK).body(true);
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
 		}
 	}
 }

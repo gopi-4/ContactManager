@@ -17,7 +17,7 @@
   border-radius: 100px 20px 20px 100px;
   box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
   animation: contact-animate 15s linear infinite;
-  animation-delay: calc(1s * var(--delay));
+  animation-delay: calc(3s * var(--delay));
 }
 
 .contact-wrapper {

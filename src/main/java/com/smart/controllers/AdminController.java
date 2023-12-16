@@ -43,19 +43,14 @@ public class AdminController {
 		return adminService.viewUsers(page, model);
 	}
 	
-	@GetMapping("/user/{Id}")
-	public String showUserDetails(@PathVariable("Id") Integer Id, Model model) {
-		return adminService.showUserDetails(Id, model);
-	}
-	
 	@GetMapping("/deleteUser/{Id}")
-	public String deleteContact(@PathVariable("Id") Integer Id, HttpSession session) {
-		return adminService.deleteContact(Id, session);
+	public String deleteUser(@PathVariable("Id") Integer Id, HttpSession session) {
+		return adminService.deleteUser(Id, session);
 
 	}
 	
 	@GetMapping("/signOut")
 	public String logout(Principal principal) {
-		return adminService.logout(principal);
+		return "redirect:/signOut";
 	}
 }

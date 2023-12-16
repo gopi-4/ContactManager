@@ -132,16 +132,7 @@
 				});
 		} 
 	</script>
-	<script>
-		const beforeUnloadHandler = (event) => {
-		  // Recommended
-		  event.preventDefault();
-		  console.log(event);
-		  // Included for legacy support, e.g. Chrome/Edge < 119
-		  event.returnValue = true;
-		};
-		window.addEventListener("beforeunload", beforeUnloadHandler);
-	</script>
+
 </body>
 
 

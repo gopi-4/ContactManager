@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -34,7 +35,6 @@ public class ApplicationConfiguration {
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
-
 	@Bean
 	public Cloudinary cloudinary(){
 		return new Cloudinary(ObjectUtils.asMap(
@@ -42,5 +42,9 @@ public class ApplicationConfiguration {
 				"api_key", "667433493622133",
 				"api_secret", "jPQZAwXVLvUZu7DFZ1qqbsSxbz4",
 				"secure", true));
+	}
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
 	}
 }

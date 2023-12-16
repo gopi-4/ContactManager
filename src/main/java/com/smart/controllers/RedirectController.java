@@ -1,6 +1,7 @@
 package com.smart.controllers;
 
 import com.smart.service.RedirectService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +17,8 @@ public class RedirectController {
 	private RedirectService redirectService;
 
 	@RequestMapping("/")
-	private String redirect(Principal principal, Model model) {
-		return redirectService.redirect(principal, model);
+	private String redirect(Principal principal, Model model, HttpSession session) {
+		return redirectService.redirect(principal, model, session);
 	}
 	
 }

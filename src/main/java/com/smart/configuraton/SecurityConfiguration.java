@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -44,7 +45,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         req -> req
                                 .requestMatchers(WHITE_LIST_URL)
@@ -76,6 +78,12 @@ public class SecurityConfiguration {
                                 .logoutUrl("/signOut")
                 )
                 .authenticationProvider(authenticationProvider)
+                .sessionManagement(
+                        session -> session
+                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                .maximumSessions(1)
+                                .expiredUrl("/signIn")
+                )
                 .build();
     }
 }

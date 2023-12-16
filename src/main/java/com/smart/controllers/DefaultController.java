@@ -4,11 +4,10 @@ import com.smart.entities.User;
 import com.smart.service.DefaultService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class DefaultController {
@@ -21,18 +20,6 @@ public class DefaultController {
 		model.addAttribute("user", new User());
 		model.addAttribute("title", "Smart Contact Manager");
 		return "default/home";
-	}
-
-	@RequestMapping("/about")
-	private String about(Model model) {
-		model.addAttribute("title", "About");
-		return "default/about";
-	}
-
-	@RequestMapping("/signUp")
-	public String signup(Model model) {
-		model.addAttribute("title", "SignUp - Smart Contact Manager");
-		return "default/register";
 	}
 
 	@RequestMapping("/signIn")
@@ -69,5 +56,10 @@ public class DefaultController {
 	public String OTPVerify(@RequestParam("OTP") int userOTP, HttpSession session, Model model) {
 		
 		return defaultService.OTPVerification(userOTP, session, model);
+	}
+
+	@GetMapping("/logOut/{userId}")
+	public ResponseEntity<Boolean> logOut(@PathVariable("userId") Integer userId) {
+		return this.defaultService.logout(userId);
 	}
 }

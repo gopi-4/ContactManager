@@ -1,9 +1,15 @@
 server:
-  port: 8080
+  port: 8585
   error:
     whitelabel:
       enabled: false
     path: /error
+  servlet:
+    session:
+      timeout: 5m
+      cookie:
+        http-only: true
+        secure: true
 spring:
   application:
     name: SCM
@@ -61,6 +67,3 @@ spring:
           auth: true
           starttls:
             enable: true
-#  web:
-#    resources:
-#      static-locations: C:\Projects\IdeaProjects\SPRING_BOOT\ContactManager\src\main\resources\static

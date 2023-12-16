@@ -19,8 +19,8 @@ public class SearchController {
 	private SearchService searchService;
 	
 	@GetMapping("/contact/{page}")
-	public String search(@PathVariable("page") Integer page, @RequestParam("search-input") String contactName, Principal principal, Model model){
-		return searchService.search(page, contactName, principal, model);
+	public String searchContact(@PathVariable("page") Integer page, @RequestParam("search-input") String contactName, Principal principal, Model model){
+		return searchService.searchContact(page, contactName, principal, model);
 	}
 	
 	@GetMapping("/user/{page}")

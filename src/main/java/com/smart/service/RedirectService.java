@@ -5,6 +5,7 @@ import com.smart.entities.User;
 import com.smart.enums.Role;
 import com.smart.repository.ContactRepository;
 import com.smart.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class RedirectService {
     private ContactRepository contactRepository;
 
     @GetMapping("/")
-    public String redirect(Principal principal, Model model) {
+    public String redirect(Principal principal, Model model, HttpSession session) {
 
         User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
         List<Contact> contacts = contactRepository.getContactByEmail(principal.getName());
@@ -42,8 +43,7 @@ public class RedirectService {
         user.setStatus(true);
         this.userRepository.save(user);
 
-//        model.addAttribute("user", user);
-//        model.addAttribute("admin", user);
+        session.setAttribute("session_user", user);
 
         if(user.getRole().equals(Role.ROLE_ADMIN)) {
             logger.info("ADMIN LOGIN.");

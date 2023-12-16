@@ -4,6 +4,8 @@ import com.smart.entities.Contact;
 import com.smart.entities.User;
 import com.smart.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +18,16 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
 
+	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
 	private UserService userService;
 
 	@ModelAttribute private void addCommonData(Model model, Principal principal){
-		model.addAttribute("user", this.userService.getUserByEmail(principal.getName()));
+		try {
+			model.addAttribute("user", this.userService.getUserByEmail(principal.getName()));
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@GetMapping("/index")
@@ -63,11 +70,6 @@ public class UserController {
 		return userService.updateContact(Id, model, page);
 	}
 
-	@GetMapping("/delete/{Id}")
-	public String deleteContact(@PathVariable("Id") Integer Id, HttpSession session) {
-		return userService.deleteContact(Id, session);
-	}
-
 	@PostMapping("/{page}/processUpdateContact")
 	public String updateContactHandler(@ModelAttribute Contact newContact,
 									   @RequestParam("profileImage") MultipartFile file,
@@ -77,6 +79,11 @@ public class UserController {
 		return userService.updateContactHandler(newContact, file, principal, session, page);
 	}
 
+	@GetMapping("/delete/{Id}")
+	public String deleteContact(@PathVariable("Id") Integer Id, HttpSession session) {
+		return userService.deleteContact(Id, session);
+	}
+
 	@PostMapping("/processUpdateUser")
 	public String updateUserHandler(@ModelAttribute User user,
 									@RequestParam("profileImageUser") MultipartFile file,
@@ -84,15 +91,15 @@ public class UserController {
 
 		return userService.updateUserHandler(user, file, session);
 	}
+	
+	@GetMapping("/invite/{username}/{contactId}/{page}")
+	public String invite(@PathVariable("username") String username, @PathVariable("contactId") Integer Id, @PathVariable("page") Integer page, HttpSession session, Model model) {
+		return userService.invite(username, Id, page, session, model);
+	}
 
 	@GetMapping("/signOut")
 	public String logout(Principal principal) {
-		return userService.logout(principal);
-	}
-	
-	@GetMapping("/invite/{username}/{contactId}/{page}")
-	public String passwordUpdate(@PathVariable("username") String username, @PathVariable("contactId") Integer Id, @PathVariable("page") Integer page, HttpSession session, Model model) {
-		return userService.passwordUpdate(username, Id, page, session, model);
+		return "redirect:/signOut";
 	}
 
 }

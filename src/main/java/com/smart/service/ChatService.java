@@ -119,5 +119,4 @@ public class ChatService {
 		model.addAttribute("status", user.isStatus());
 		return "admin/chat";
 	}
-
 }

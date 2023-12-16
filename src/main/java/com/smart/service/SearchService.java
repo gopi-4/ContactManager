@@ -25,7 +25,7 @@ public class SearchService {
 	@Autowired
 	private ContactRepository contactRepository; 
 
-	public String search(Integer page, String contactName, Principal principal, Model model){
+	public String searchContact(Integer page, String contactName, Principal principal, Model model){
 
 		try {
 			User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
@@ -47,7 +47,6 @@ public class SearchService {
 		}catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		return "user/viewContacts";
 	}
 

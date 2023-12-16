@@ -1,8 +1,8 @@
 package com.smart.service;
 
+import com.smart.dto.Message;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
-import com.smart.helpers.Message;
 import com.smart.repository.ContactRepository;
 import com.smart.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -43,6 +42,8 @@ public class UserService {
 			User user = this.userRepository.findById(newUser.getId()).orElse(null);
 
 			if(!file.isEmpty()) {
+				assert user != null;
+				this.imageService.delete(user.getImage().public_id);
 				newUser.setImage(imageService.upload(file));
 			}else {
 				newUser.setImage(Objects.requireNonNull(user).getImage());
@@ -108,6 +109,7 @@ public class UserService {
 				model.addAttribute("title", "Error");
 			}
 		} catch (Exception e) {
+			model.addAttribute("title", "Error");
 			logger.error(e.getMessage());
 		}
 		return "user/viewContacts";
@@ -116,7 +118,6 @@ public class UserService {
 	public String updateContact(Integer Id, Model model, Integer page) {
 
 		Contact contact = this.contactRepository.findById(Id).orElse(null);
-
 		model.addAttribute("currentPage", page);
 		model.addAttribute("contact", contact);
 		model.addAttribute("title", "Update Contact");
@@ -128,7 +129,7 @@ public class UserService {
 
 		try {
 			if(!file.isEmpty()) {
-				newContact.setImage(null);
+				this.imageService.delete(Objects.requireNonNull(this.contactRepository.findById(newContact.getId()).orElse(null)).getImage().getPublic_id());
 				newContact.setImage(imageService.upload(file));
 			}else {
 				newContact.setImage(Objects.requireNonNull(this.contactRepository.findById(newContact.getId()).orElse(null)).getImage());
@@ -154,12 +155,10 @@ public class UserService {
 	}
 
 	public String deleteContact(Integer Id, HttpSession session) {
-
 		try {
-
+			this.imageService.delete(Objects.requireNonNull(this.contactRepository.findById(Id).orElse(null)).getImage().getPublic_id());
 			this.contactRepository.deleteById(Id);
 			session.setAttribute("message", new Message("Contact Deleted Successfully...", "success"));
-
 		} catch (Exception e) {
 			logger.info(e.getMessage());
 			session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));
@@ -167,25 +166,12 @@ public class UserService {
 		return "redirect:/user/viewContacts/0";
 	}
 
-	public String logout(Principal principal) {
-
-		User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
-
-		assert user != null;
-		user.setStatus(false);
-		user.setDate(new Date().toString());
-		this.userRepository.save(user);
-		logger.info("USER LOGOUT.");
-		return "redirect:/signOut";
-	}
-
-	public String passwordUpdate(String username, Integer contactId, Integer page, HttpSession session, Model model) {
+	public String invite(String username, Integer contactId, Integer page, HttpSession session, Model model) {
 		model.addAttribute("title", "Change Password");
 		try {
 			Contact contact = this.contactRepository.findById(contactId).orElse(null);
 			if(contact==null) {
 				session.setAttribute("message", new Message("Contact not Exist..", "danger"));
-				model.addAttribute("title", "View Contacts");
 			}else {
 				String subject = "Invite : Contact Manager";
 				String message = username+" invites you to : https://contactmanager-3c3x.onrender.com/";
@@ -193,17 +179,15 @@ public class UserService {
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {
 					session.setAttribute("message", new Message("Invite Send to "+contact.getName(), "success"));
-					model.addAttribute("title", "View Contacts");
 				}else {
 					session.setAttribute("message", new Message("Contact Email Not Exists..", "danger"));
-					model.addAttribute("title", "View Contacts");
 				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			session.setAttribute("message", new Message("Error Sending Invite..", "danger"));
-		}		
+		}
+		model.addAttribute("title", "View Contacts");
 		return "redirect:/user/viewContacts/"+page;
 	}
-
 }
