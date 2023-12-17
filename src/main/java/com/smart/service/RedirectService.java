@@ -22,7 +22,6 @@ public class RedirectService {
     private final Logger logger = LogManager.getLogger(RedirectService.class);
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ContactRepository contactRepository;
 
@@ -34,10 +33,8 @@ public class RedirectService {
 
         if (contacts!=null) {
             for (Contact contact : contacts) contact.setStatus(true);
+            this.contactRepository.saveAll(contacts);
         }
-
-        assert contacts != null;
-        this.contactRepository.saveAll(contacts);
 
         assert user != null;
         user.setStatus(true);

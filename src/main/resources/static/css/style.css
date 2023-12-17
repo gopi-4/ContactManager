@@ -270,14 +270,21 @@ margin-left: 4px;
       height: 300px;
       margin: auto;
       border-radius: 10px;
+      padding-left: 0px;
+      padding-right: 0px;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .widget-header{
     color: white;
     height: 50px;
-    width: 355px;
-    padding: 5px 12px;
+    padding: 8px 12px;
     border-radius: 10px 10px 0px 0px;
+}
+
+.city {
+    height: 70px;
+    margin-top: 100px;
 }
 
 .hover {

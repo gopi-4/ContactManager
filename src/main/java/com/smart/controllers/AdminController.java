@@ -46,7 +46,6 @@ public class AdminController {
 	@GetMapping("/deleteUser/{Id}")
 	public String deleteUser(@PathVariable("Id") Integer Id, HttpSession session) {
 		return adminService.deleteUser(Id, session);
-
 	}
 	
 	@GetMapping("/signOut")
