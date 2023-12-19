@@ -31,8 +31,8 @@ public class CustomSessionListener implements HttpSessionListener {
             counter.decrementAndGet();  //decrementing counter
             User user = (User) event.getSession().getAttribute("session_user");
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/logOut/"+user.getId(), Boolean.class);
-            logger.info(user.getRole()+" LogOut "+ responseEntity.getBody());
+            ResponseEntity<Void> responseEntity = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/logOut/"+user.getId(), Void.class);
+            ResponseEntity<Void> responseEntity2 = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/false", Void.class);
             updateSessionCounter(event);
         }catch (Exception e) {
             logger.error(e.getMessage());

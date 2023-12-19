@@ -4,7 +4,6 @@ import com.smart.entities.User;
 import com.smart.service.DefaultService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +58,12 @@ public class DefaultController {
 	}
 
 	@GetMapping("/logOut/{userId}")
-	public ResponseEntity<Boolean> logOut(@PathVariable("userId") Integer userId) {
-		return this.defaultService.logout(userId);
+	public void logOut(@PathVariable("userId") Integer userId) {
+		this.defaultService.logout(userId);
+	}
+
+	@GetMapping("/updateContactStatus/{email}/{status}")
+	public void updateContactStatusByUserEmail(@PathVariable("email") String email, @PathVariable("status") Boolean status) {
+		this.defaultService.updateContactStatusByUserEmail(email, status);
 	}
 }

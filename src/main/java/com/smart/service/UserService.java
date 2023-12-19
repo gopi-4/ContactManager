@@ -167,7 +167,6 @@ public class UserService {
 	}
 
 	public String invite(String username, Integer contactId, Integer page, HttpSession session, Model model) {
-		model.addAttribute("title", "Change Password");
 		try {
 			Contact contact = this.contactRepository.findById(contactId).orElse(null);
 			if(contact==null) {
