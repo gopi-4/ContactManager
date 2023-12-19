@@ -56,14 +56,4 @@ public class DefaultController {
 		
 		return defaultService.OTPVerification(userOTP, session, model);
 	}
-
-	@GetMapping("/logOut/{userId}")
-	public void logOut(@PathVariable("userId") Integer userId) {
-		this.defaultService.logout(userId);
-	}
-
-	@GetMapping("/updateContactStatus/{email}/{status}")
-	public void updateContactStatusByUserEmail(@PathVariable("email") String email, @PathVariable("status") Boolean status) {
-		this.defaultService.updateContactStatusByUserEmail(email, status);
-	}
 }
