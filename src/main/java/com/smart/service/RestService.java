@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -32,10 +33,8 @@ public class RestService {
             user.setDate(new Date().toString());
             this.userRepository.save(user);
             logger.info(user.getEmail()+" LogOut.");
-            /*return ResponseEntity.status(HttpStatus.OK).body(true);*/
         }catch (Exception e) {
             logger.error(e.getMessage());
-            /*return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);*/
         }
     }
 
@@ -47,9 +46,29 @@ public class RestService {
                 for (Contact contact : contacts) contact.setStatus(status);
                 this.contactRepository.saveAll(contacts);
             }
-            logger.info("Contact status updated.");
+            logger.info("Contact status updated to "+status);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }
+    }
+
+    @Async("asyncTaskExecutor")
+    public void updateRegistrationStatus(String email) {
+        try {
+            List<Contact> contacts = this.contactRepository.getContactByEmail(email);
+            if(contacts!=null) {
+                for (Contact contact : contacts) contact.setRegister(true);
+                this.contactRepository.saveAll(contacts);
+            }
+            logger.info("Registration Status Changed Successfully");
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+    @Async("asyncTaskExecutor")
+    public static void getApiCall(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getForEntity(url, Void.class);
     }
 }

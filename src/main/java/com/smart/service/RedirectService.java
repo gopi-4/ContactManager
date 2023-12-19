@@ -7,11 +7,9 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 
@@ -27,9 +25,8 @@ public class RedirectService {
 
         User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
 
-        RestTemplate restTemplate = new RestTemplate();
         assert user != null;
-        ResponseEntity<Void> responseEntity = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/true", Void.class);
+        RestService.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/true");
 
         user.setStatus(true);
         this.userRepository.save(user);

@@ -19,4 +19,9 @@ public class RestController {
     public void updateContactStatusByUserEmail(@PathVariable("email") String email, @PathVariable("status") Boolean status) {
         this.restService.updateContactStatusByUserEmail(email, status);
     }
+
+    @GetMapping("/contactRegistrationStatus/{email}")
+    public void updateRegistrationStatus(@PathVariable("email") String email) {
+        this.restService.updateRegistrationStatus(email);
+    }
 }

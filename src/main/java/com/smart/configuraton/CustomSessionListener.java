@@ -1,13 +1,12 @@
 package com.smart.configuraton;
 
 import com.smart.entities.User;
+import com.smart.service.RestService;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,9 +29,8 @@ public class CustomSessionListener implements HttpSessionListener {
             logger.info("Session destroyed. Removing the Session from the counter.");
             counter.decrementAndGet();  //decrementing counter
             User user = (User) event.getSession().getAttribute("session_user");
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Void> responseEntity = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/logOut/"+user.getId(), Void.class);
-            ResponseEntity<Void> responseEntity2 = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/false", Void.class);
+            RestService.getApiCall("https://contactmanager-3c3x.onrender.com/logOut/"+user.getId());
+            RestService.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/false");
             updateSessionCounter(event);
         }catch (Exception e) {
             logger.error(e.getMessage());

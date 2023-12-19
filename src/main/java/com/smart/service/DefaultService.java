@@ -43,6 +43,8 @@ public class DefaultService {
 			user.setAuthProvider(AuthenticationProvider.LOCAL);
 			user.setImage(imageService.getDefault());
 
+			RestService.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail());
+
 			this.userRepository.save(user);
 
 			session.setAttribute("message", new Message("Successfully Registered!! ", "alert-success"));
