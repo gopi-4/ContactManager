@@ -14,9 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
 import java.util.Objects;
 
 @Service
@@ -32,25 +32,23 @@ public class UserService {
 	@Autowired
 	private ImageService imageService;
 
-	public User getUserByEmail(String email) {
-		return this.userRepository.getUserByEmail(email).orElse(null);
-	}
+	RestTemplate restTemplate = new RestTemplate();
 
-	public String updateUserHandler(User newUser, MultipartFile file, HttpSession session) {
+	public User getUser(int userId) {return restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();}
+
+	public String updateUserHandler(String username, String about, MultipartFile file, HttpSession session) {
 		try {
-
-			User user = this.userRepository.findById(newUser.getId()).orElse(null);
-
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = getUser(userId);
+			assert user != null;
 			if(!file.isEmpty()) {
-				assert user != null;
 				this.imageService.delete(user.getImage().public_id);
-				newUser.setImage(imageService.upload(file));
-			}else {
-				newUser.setImage(Objects.requireNonNull(user).getImage());
+				user.setImage(imageService.upload(file));
 			}
+			if (username!=null) user.setName(username);
+			if (about!=null) user.setAbout(about);
 
-			newUser.setPassword(Objects.requireNonNull(user).getPassword());
-			this.userRepository.save(newUser);
+			restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateUser", user, User.class);
 
 			logger.info("Profile Updated.");
 			session.setAttribute("message", new Message("User updated successfully...", "success"));
@@ -61,12 +59,10 @@ public class UserService {
 		return "redirect:/user/profile";
 	}
 
-	public String addContact(Contact contact, MultipartFile file, Model model, Principal principal, HttpSession session) {
+	public String addContact(Contact contact, MultipartFile file, Model model, HttpSession session) {
 		try {
-
-			String emailString = principal.getName();
-			User user = userRepository.getUserByEmail(emailString).orElse(null);
-
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = getUser(userId);
 			if(file.isEmpty()) {
 				contact.setImage(imageService.getDefault());
 			}else {
@@ -74,7 +70,8 @@ public class UserService {
 			}
 
 			contact.setRegister(false);
-			if(this.userRepository.getUserByEmail(contact.getEmail()).orElse(null)!=null) contact.setRegister(true);
+			boolean temp = this.userRepository.getUserByEmail(contact.getEmail()).isPresent();
+			if(temp) contact.setRegister(true);
 
 			assert user != null;
 			contact.setUserId(user.getId());
@@ -90,14 +87,14 @@ public class UserService {
 		return "user/addContact";
 	}
 
-	public String viewContacts(Integer page, Model model, Principal principal) {
+	public String viewContacts(Integer page, Model model, HttpSession session) {
 		try {
-			String userEmail = principal.getName();
-			User user = userRepository.getUserByEmail(userEmail).orElse(null);
 
-			Pageable pageable = PageRequest.of(page, 5);
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = getUser(userId);
 
 			assert user != null;
+			Pageable pageable = PageRequest.of(page, 5);
 			Page<Contact> contacts = this.contactRepository.findContactsByUserId(user.getId(), pageable);
 
 			if (page <= contacts.getTotalPages() && page >= 0) {
@@ -115,35 +112,37 @@ public class UserService {
 		return "user/viewContacts";
 	}
 
-	public String updateContact(Integer Id, Model model, Integer page) {
+	public String updateContact(Integer Id, Model model) {
 
-		Contact contact = this.contactRepository.findById(Id).orElse(null);
-		model.addAttribute("currentPage", page);
+		Contact contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+Id, Contact.class).getBody();
 		model.addAttribute("contact", contact);
 		model.addAttribute("title", "Update Contact");
 
 		return "user/updateContact";
 	}
 
-	public String updateContactHandler(Contact newContact, MultipartFile file, Principal principal, HttpSession session, Integer page) {
-
+	public String updateContactHandler(Contact newContact, MultipartFile file, HttpSession session, Integer page) {
 		try {
+
+			Contact temp_contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+newContact.getId(), Contact.class).getBody();
 			if(!file.isEmpty()) {
-				this.imageService.delete(Objects.requireNonNull(this.contactRepository.findById(newContact.getId()).orElse(null)).getImage().getPublic_id());
+				this.imageService.delete(Objects.requireNonNull(temp_contact).getImage().getPublic_id());
 				newContact.setImage(imageService.upload(file));
 			}else {
-				newContact.setImage(Objects.requireNonNull(this.contactRepository.findById(newContact.getId()).orElse(null)).getImage());
+				newContact.setImage(Objects.requireNonNull(temp_contact).getImage());
 			}
 
-			User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = getUser(userId);
 
 			assert user != null;
 			newContact.setUserId(user.getId());
 
 			newContact.setRegister(false);
-			if (this.userRepository.getUserByEmail(newContact.getEmail()).orElse(null)!=null) newContact.setRegister(true);
+			boolean temp = this.userRepository.getUserByEmail(newContact.getEmail()).isPresent();
+			if(temp) newContact.setRegister(true);
 
-			this.contactRepository.save(newContact);
+			restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateContact", newContact, Contact.class);
 
 			logger.info("Contact Updated.");
 			session.setAttribute("message", new Message("Your Contact updated successfully...", "success"));
@@ -156,8 +155,9 @@ public class UserService {
 
 	public String deleteContact(Integer Id, HttpSession session) {
 		try {
-			this.imageService.delete(Objects.requireNonNull(this.contactRepository.findById(Id).orElse(null)).getImage().getPublic_id());
-			this.contactRepository.deleteById(Id);
+			Contact temp_contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+Id, Contact.class).getBody();
+			this.imageService.delete(Objects.requireNonNull(temp_contact).getImage().getPublic_id());
+			restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/deleteContact/"+Id, Void.class);
 			session.setAttribute("message", new Message("Contact Deleted Successfully...", "success"));
 		} catch (Exception e) {
 			logger.info(e.getMessage());
@@ -168,7 +168,7 @@ public class UserService {
 
 	public String invite(String username, Integer contactId, Integer page, HttpSession session, Model model) {
 		try {
-			Contact contact = this.contactRepository.findById(contactId).orElse(null);
+			Contact contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+contactId, Contact.class).getBody();
 			if(contact==null) {
 				session.setAttribute("message", new Message("Contact not Exist..", "danger"));
 			}else {

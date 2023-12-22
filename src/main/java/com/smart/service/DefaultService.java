@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 
@@ -28,10 +29,13 @@ public class DefaultService {
 	@Autowired
 	private ImageService imageService;
 
+	RestTemplate restTemplate = new RestTemplate();
+
 	public String register(String username, String email, String password, Model model, HttpSession session) {
 
 		try {
-			if (this.userRepository.getUserByEmail(email).orElse(null)!=null) throw new Exception("User Exist.");
+			User temp_user = this.userRepository.getUserByEmail(email).orElse(null);
+			if (temp_user!=null) throw new Exception("User Exist.");
 			User user = new User();
 			user.setEmail(email);
 			user.setName(username);
@@ -43,7 +47,7 @@ public class DefaultService {
 			user.setAuthProvider(AuthenticationProvider.LOCAL);
 			user.setImage(imageService.getDefault());
 
-			RestService.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail());
+			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail());
 
 			this.userRepository.save(user);
 
@@ -61,8 +65,7 @@ public class DefaultService {
 
 		model.addAttribute("title", "Change Password");
 		try {
-
-			User user = userRepository.getUserByEmail(username).orElse(null);
+			User user = this.userRepository.getUserByEmail(username).orElse(null);
 			if(user==null) {
 				session.setAttribute("message", new Message("User not Exist..", "danger"));
 				return "new/forgotPassword.html";
@@ -86,7 +89,6 @@ public class DefaultService {
 					return "new/forgotPassword.html";
 				}
 			}
-			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			session.setAttribute("message", new Message("Error Changing Password..", "danger"));
@@ -97,17 +99,17 @@ public class DefaultService {
 	public String OTPVerification(int UserOTP, HttpSession session, Model model) {
 		
 		int OTP = (int)session.getAttribute("oldOTP");
-		User user = (User)session.getAttribute("user");
+		Integer userId = (Integer) session.getAttribute("session_user_Id");
+		User user =  restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+		assert user!=null;
 		String newPassword = (String)session.getAttribute("newPassword");
 		if (OTP == UserOTP) {
-			
 			model.addAttribute("title", "SignIn - Smart Contact Manager");
 			user.setPassword(this.passwordEncoder.encode(newPassword));
-			this.userRepository.save(user);
+			restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateUser", user, User.class);
 			session.setAttribute("message", new Message("Password Changed Successfully", "success"));
 			return "redirect:/signIn?change=Password Changed Successfully.";
 		}else {
-			
 			model.addAttribute("title", "OTP");
 			session.setAttribute("message", new Message("Wrong OTP!!", "danger"));
 			return "default/otp";

@@ -15,18 +15,12 @@ spring:
     name: SCM
   datasource:
     driver-class-name: org.postgresql.Driver
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:8080/contactManager?serverTimezone=UTC
-#    username: root
-#    password: root
     url: jdbc:postgresql://ep-black-snowflake-30567558.us-east-2.aws.neon.tech/ContactManager_DB
     username: gkalyankar33
     password: 1dPanL2MHkqB
   jpa:
     hibernate:
       ddl-auto: update
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
   servlet:
     multipart:

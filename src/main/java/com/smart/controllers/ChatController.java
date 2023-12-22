@@ -4,6 +4,7 @@ import com.smart.entities.Messages;
 import com.smart.entities.User;
 import com.smart.repository.UserRepository;
 import com.smart.service.ChatService;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -26,10 +27,13 @@ public class ChatController {
 	@Autowired
 	private UserRepository userRepository;
 
+	RestTemplate restTemplate = new RestTemplate();
+
 	@ModelAttribute
-	private void addCommonData(Model model, Principal principal) {
+	private void addCommonData(Model model, HttpSession session) {
 		try {
-			User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = restTemplate.getForEntity("http://localhost:8585/getUser/"+userId, User.class).getBody();
 			model.addAttribute("admin", user);
 			model.addAttribute("user", user);
 		}catch (Exception e) {
@@ -43,8 +47,8 @@ public class ChatController {
 	}
 	
 	@PostMapping("/getChat")
-	public ResponseEntity<Optional<String>> getChat(@RequestParam("incoming") Integer incoming, Principal principal){
-		return chatService.getChat(incoming, principal);
+	public ResponseEntity<Optional<String>> getChat(@RequestParam("incoming") Integer incoming, HttpSession session){
+		return chatService.getChat(incoming, session);
 	}
 	
 	@PostMapping("/insertChat")
@@ -58,8 +62,8 @@ public class ChatController {
 	}
 	
 	@PostMapping("/admin/getChat")
-	public ResponseEntity<Optional<String>> adminGetChat(@RequestParam("incoming") Integer incoming, Principal principal){
-		return chatService.adminGetChat(incoming, principal);
+	public ResponseEntity<Optional<String>> adminGetChat(@RequestParam("incoming") Integer incoming, HttpSession session){
+		return chatService.adminGetChat(incoming, session);
 	}
 	
 	@PostMapping("/admin/insertChat")

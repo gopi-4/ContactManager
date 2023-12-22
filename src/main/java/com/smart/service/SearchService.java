@@ -5,6 +5,7 @@ import com.smart.entities.User;
 import com.smart.enums.Role;
 import com.smart.repository.ContactRepository;
 import com.smart.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +14,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import java.security.Principal;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class SearchService {
 
 	private final Logger logger = LogManager.getLogger(SearchService.class);
 	@Autowired
-	private UserRepository userRepository;
+	private ContactRepository contactRepository;
 	@Autowired
-	private ContactRepository contactRepository; 
+	private UserRepository userRepository;
+	RestTemplate restTemplate = new RestTemplate();
 
-	public String searchContact(Integer page, String contactName, Principal principal, Model model){
+	public String searchContact(Integer page, String contactName, HttpSession session, Model model){
 
 		try {
-			User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
-
-			Pageable pageable = PageRequest.of(page, 5);
-
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 			assert user != null;
+			Pageable pageable = PageRequest.of(page, 5);
 			Page<Contact> contacts = this.contactRepository.findByNameContainingAndUserId(contactName, user.getId(), pageable);
 
 			if (page <= contacts.getTotalPages() && page >= 0) {
@@ -50,15 +50,16 @@ public class SearchService {
 		return "user/viewContacts";
 	}
 
-	public String searchUser(Integer page, String contactName, Principal principal, Model model){
+	public String searchUser(Integer page, String contactName, HttpSession session, Model model){
 		
 		try {
 
-			User admin = this.userRepository.getUserByEmail(principal.getName()).orElse(null);
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User admin = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 
 			Pageable pageable = PageRequest.of(page, 5);
-
 			Page<User> users = this.userRepository.findByNameContainingAndRole(contactName, Role.ROLE_USER, pageable);
+
 			if (page <= users.getTotalPages() && page >= 0) {
 				model.addAttribute("users", users);
 				model.addAttribute("currentPage", page);

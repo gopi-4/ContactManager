@@ -28,5 +28,4 @@ public interface ContactRepository extends JpaRepository<Contact, Integer>{
 
 	@Transactional
 	void deleteByUserId(int userId);
-
 }

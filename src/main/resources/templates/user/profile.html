@@ -20,9 +20,11 @@
 			<!-- END DUMMY -->
 			<!-- PROFILE -->
 			<div class="col align-items-center flex-col sign-in">
-				<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
-					<span class="text-center" th:text="${session.message.content}"></span>
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				<div th:if=${session.message}>
+					<div th:classappend="${'alert-'+session.message.type}" class="alert alert-dismissible fade show text-center" role="alert">
+						<span th:text="${session.message.content}"></span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
 					<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
 				</div>
 				<div class="form-wrapper align-items-center">
@@ -42,10 +44,10 @@
 							</div>
 							<div class="input-group">
 								<i class='bx bx-mail-send'></i>
-								<input type="email"  id="email" name="email" placeholder="Email" th:value="${user.email}" readonly>
+								<input type="email" id="email" name="email" placeholder="Email" th:value="${user.email}" readonly>
 							</div>
 							<div class="input-group">
-								<textarea style="width:100%;" placeholder="About" name="about" id="mytextarea" rows="5" th:value="${user.about}" readonly></textarea>
+								<textarea style="width:100%;" name="about" id="mytextarea" rows="5" th:placeholder="${user.about}" readonly></textarea>
 							</div>
 							<button type="submit">
 								EDIT

@@ -20,5 +20,4 @@ public class RedirectController {
 	private String redirect(Principal principal, Model model, HttpSession session) {
 		return redirectService.redirect(principal, model, session);
 	}
-	
 }

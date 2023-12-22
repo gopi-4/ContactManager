@@ -1,7 +1,6 @@
 package com.smart.configuraton;
 
-import com.smart.entities.User;
-import com.smart.service.RestService;
+import com.smart.service.StaticServices;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
@@ -17,7 +16,6 @@ public class CustomSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent event) {
-
         logger.info("New session is created. Adding Session to the counter.");
         counter.incrementAndGet();  //incrementing the counter
         updateSessionCounter(event);
@@ -26,15 +24,15 @@ public class CustomSessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
         try {
-            logger.info("Session destroyed. Removing the Session from the counter.");
-            counter.decrementAndGet();  //decrementing counter
-            User user = (User) event.getSession().getAttribute("session_user");
-            RestService.getApiCall("https://contactmanager-3c3x.onrender.com/logOut/"+user.getId());
-            RestService.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/false");
-            updateSessionCounter(event);
+            Integer userId = (Integer) event.getSession().getAttribute("session_user_Id");
+            StaticServices.getApiCall("http://localhost:8585/logOut/"+userId);
+            StaticServices.getApiCall("http://localhost:8585/updateContactStatus/"+userId+"/false");
         }catch (Exception e) {
             logger.error(e.getMessage());
         }
+        logger.info("Session destroyed. Removing the Session from the counter.");
+        counter.decrementAndGet();  //decrementing counter
+        updateSessionCounter(event);
     }
 
     private void updateSessionCounter(HttpSessionEvent httpSessionEvent){

@@ -23,15 +23,14 @@ public class RedirectService {
     @GetMapping("/")
     public String redirect(Principal principal, Model model, HttpSession session) {
 
-        User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
-
+        User user = this.userRepository.getUserByEmail(principal.getName()).orElse(null);
         assert user != null;
-        RestService.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getEmail()+"/true");
+        StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getId()+"/true");
 
         user.setStatus(true);
         this.userRepository.save(user);
 
-        session.setAttribute("session_user", user);
+        session.setAttribute("session_user_Id", user.getId());
 
         if(user.getRole().equals(Role.ROLE_ADMIN)) {
             logger.info("ADMIN LOGIN.");

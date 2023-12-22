@@ -32,7 +32,6 @@ public class ImageService {
             return null;
         }
     }
-
     public Image getDefault() {
         try {
             Map data = cloudinary.api().resourceByAssetID("85c1e82b140fb068250632cd812eafff", ObjectUtils.emptyMap());
@@ -44,7 +43,6 @@ public class ImageService {
             return null;
         }
     }
-
     @Async("asyncTaskExecutor")
     public void delete(String publicId) {
         try {

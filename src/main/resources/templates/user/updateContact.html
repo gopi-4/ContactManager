@@ -29,7 +29,7 @@
 				</div>
 				<div class="form-wrapper align-items-center">
 					<div class="form sign-in">
-						<form enctype="multipart/form-data" th:action="@{'/user/'+${currentPage}+'/processUpdateContact'}" method="POST" th:object="${contact}" class="mt-2">
+						<form enctype="multipart/form-data" th:action="@{/user/processUpdateContact}" method="POST" th:object="${contact}" class="mt-2">
 							<input type="hidden" th:value="${contact.Id}" name="Id" />
 							<div class="input-group">
 								<i class='bx bxs-user'></i>

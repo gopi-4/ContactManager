@@ -3,9 +3,8 @@ package com.smart.service;
 import com.smart.entities.Contact;
 import com.smart.entities.Messages;
 import com.smart.entities.User;
-import com.smart.repository.ContactRepository;
 import com.smart.repository.MessageRepository;
-import com.smart.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,24 +22,23 @@ public class ChatService {
 
 	private final Logger logger = LogManager.getLogger(ChatService.class);
 	@Autowired
-	private ContactRepository contactRepository;
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private MessageRepository messageRepository;
+
+	RestTemplate restTemplate = new RestTemplate();
 
 	public String chat(int Id, Model model) {
 		
-		Contact contact = this.contactRepository.findById(Id).orElse(null);
+		Contact contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+Id, Contact.class).getBody();
 		if(contact==null) return "redirect:/user/viewContacts/0";
 		model.addAttribute("contact", contact);
-		model.addAttribute("status", Objects.requireNonNull(this.userRepository.getUserByEmail(contact.getEmail()).orElse(null)).isStatus());
+		model.addAttribute("status", contact.isStatus());
 		return "default/chat";
 	}
 
-	public ResponseEntity<Optional<String>> getChat(Integer incoming, Principal principal){
+	public ResponseEntity<Optional<String>> getChat(Integer incoming, HttpSession session){
 
-		User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
+		Integer userId = (Integer) session.getAttribute("session_user_Id");
+		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 
 		assert user != null;
 		int outgoing = user.getId();
@@ -75,16 +72,18 @@ public class ChatService {
 
 	public String adminChat(int Id, Model model) {
 		
-		User user = this.userRepository.findById(Id).orElse(null);
+		/*User user = this.userRepository.findById(Id).orElse(null);*/
+		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+Id, User.class).getBody();
 		if(user==null) return "redirect:/admin/viewUsers/0";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.isStatus());
 		return "admin/chat";
 	}
 
-	public ResponseEntity<Optional<String>> adminGetChat(Integer incoming, Principal principal){
+	public ResponseEntity<Optional<String>> adminGetChat(Integer incoming, HttpSession session){
 
-		User user = userRepository.getUserByEmail(principal.getName()).orElse(null);
+		Integer userId = (Integer) session.getAttribute("session_user_Id");
+		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 		assert user != null;
 		int outgoing = user.getId();
 		StringBuilder sb = new StringBuilder();
@@ -113,7 +112,8 @@ public class ChatService {
 	}
 
 	public String chatAdmin(Model model) {
-		User user = userRepository.getUserByEmail("2019058@iiitdmj.ac.in").orElse(null);
+		int userId = 1;
+		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 		if(user==null) return "redirect:/user/index";
 		model.addAttribute("contact", user);
 		model.addAttribute("status", user.isStatus());

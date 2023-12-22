@@ -3,6 +3,7 @@ package com.smart.controllers;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
 import com.smart.service.UserService;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -22,9 +24,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@ModelAttribute private void addCommonData(Model model, Principal principal){
+	RestTemplate restTemplate = new RestTemplate();
+
+	@ModelAttribute
+	private void addCommonData(Model model, HttpSession session){
 		try {
-			model.addAttribute("user", this.userService.getUserByEmail(principal.getName()));
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = restTemplate.getForEntity("http://localhost:8585/getUser/"+userId, User.class).getBody();
+			model.addAttribute("user", user);
 		}catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -37,9 +44,8 @@ public class UserController {
 	}
 
 	@GetMapping("/addContact")
-	private String openAddContactForm(Model model) {
+	private String addContactForm(Model model) {
 		model.addAttribute("title", "Add Contact");
-		model.addAttribute("contact", new Contact());
 		return "user/addContact";
 	}
 
@@ -56,27 +62,26 @@ public class UserController {
 	}
 
 	@PostMapping("/processData")
-	private String addContact(@ModelAttribute() Contact contact, @RequestParam("profileImage") MultipartFile file, Model model, Principal principal, HttpSession session) {
-		return userService.addContact(contact, file, model, principal, session);
+	private String addContact(@ModelAttribute() Contact contact, @RequestParam("profileImage") MultipartFile file, Model model, HttpSession session) {
+		return userService.addContact(contact, file, model, session);
 	}
 
 	@GetMapping("/viewContacts/{page}")
-	private String viewContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
-		return userService.viewContacts(page, model, principal);
+	private String viewContacts(@PathVariable("page") Integer page, Model model, HttpSession session) {
+		return userService.viewContacts(page, model, session);
 	}
 
-	@GetMapping("/updateContact/{Id}/{currentPage}")
-	public String updateContact(@PathVariable("Id") Integer Id, Model model, @PathVariable("currentPage") Integer page) {
-		return userService.updateContact(Id, model, page);
+	@GetMapping("/updateContact/{Id}")
+	public String updateContact(@PathVariable("Id") Integer Id, Model model) {
+		return userService.updateContact(Id, model);
 	}
 
-	@PostMapping("/{page}/processUpdateContact")
+	@PostMapping("/processUpdateContact")
 	public String updateContactHandler(@ModelAttribute Contact newContact,
 									   @RequestParam("profileImage") MultipartFile file,
-									   Principal principal,
 									   HttpSession session, @PathVariable("page") Integer page) {
 
-		return userService.updateContactHandler(newContact, file, principal, session, page);
+		return userService.updateContactHandler(newContact, file, session, page);
 	}
 
 	@GetMapping("/delete/{Id}")
@@ -85,11 +90,12 @@ public class UserController {
 	}
 
 	@PostMapping("/processUpdateUser")
-	public String updateUserHandler(@ModelAttribute User user,
+	public String updateUserHandler(@RequestParam("username") @Nullable String username,
+									@RequestParam("about") @Nullable String about,
 									@RequestParam("profileImageUser") MultipartFile file,
 									HttpSession session) {
 
-		return userService.updateUserHandler(user, file, session);
+		return userService.updateUserHandler(username, about, file, session);
 	}
 	
 	@GetMapping("/invite/{username}/{contactId}/{page}")

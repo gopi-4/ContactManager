@@ -1,8 +1,10 @@
 package com.smart.controllers;
 
+import com.smart.entities.User;
 import com.smart.service.AdminService;
-import com.smart.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 
@@ -17,14 +20,21 @@ import java.security.Principal;
 @RequestMapping("/admin")
 public class AdminController {
 
+	private final Logger logger = LogManager.getLogger(UserController.class);
 	@Autowired
 	private AdminService adminService;
-	@Autowired
-	private UserService userService;
+
+	RestTemplate restTemplate = new RestTemplate();
 
 	@ModelAttribute
-	private void addCommonData(Model model, Principal principal) {
-		model.addAttribute("admin", this.userService.getUserByEmail(principal.getName()));
+	private void addCommonData(Model model, HttpSession session) {
+		try {
+			Integer userId = (Integer) session.getAttribute("session_user_Id");
+			User user = restTemplate.getForEntity("http://localhost:8585/getUser/"+userId, User.class).getBody();
+			model.addAttribute("admin", user);
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
 	@GetMapping("/index")
 	private String index(Model model) {
