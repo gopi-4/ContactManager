@@ -30,7 +30,7 @@ public class AdminController {
 	private void addCommonData(Model model, HttpSession session) {
 		try {
 			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("http://localhost:8585/getUser/"+userId, User.class).getBody();
+			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 			model.addAttribute("admin", user);
 		}catch (Exception e) {
 			logger.error(e.getMessage());

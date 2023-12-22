@@ -2,7 +2,6 @@ package com.smart.controllers;
 
 import com.smart.entities.Messages;
 import com.smart.entities.User;
-import com.smart.repository.UserRepository;
 import com.smart.service.ChatService;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -24,16 +23,13 @@ public class ChatController {
 	@Autowired
 	private ChatService chatService;
 
-	@Autowired
-	private UserRepository userRepository;
-
 	RestTemplate restTemplate = new RestTemplate();
 
 	@ModelAttribute
 	private void addCommonData(Model model, HttpSession session) {
 		try {
 			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("http://localhost:8585/getUser/"+userId, User.class).getBody();
+			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
 			model.addAttribute("admin", user);
 			model.addAttribute("user", user);
 		}catch (Exception e) {
