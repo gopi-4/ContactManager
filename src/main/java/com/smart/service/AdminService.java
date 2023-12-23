@@ -61,7 +61,9 @@ public class AdminService {
 			for(Contact contact : contacts) this.imageService.delete(contact.getImage().getPublic_id());
 			this.contactRepository.deleteByUserId(Id);
 			restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/deleteUser/"+Id, Void.class);
+			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail()+"/false");
 			session.setAttribute("message", new Message("User Deleted Successfully...", "success"));
+			logger.info(user.getEmail()+" Deleted.");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));

@@ -75,6 +75,7 @@ public class UserService {
 
 			assert user != null;
 			contact.setUserId(user.getId());
+
 			this.contactRepository.save(contact);
 
 			logger.info("Contact Saved.");
@@ -112,10 +113,11 @@ public class UserService {
 		return "user/viewContacts";
 	}
 
-	public String updateContact(Integer Id, Model model) {
+	public String updateContact(Integer Id, Model model, int page) {
 
 		Contact contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+Id, Contact.class).getBody();
 		model.addAttribute("contact", contact);
+		model.addAttribute("page", page);
 		model.addAttribute("title", "Update Contact");
 
 		return "user/updateContact";

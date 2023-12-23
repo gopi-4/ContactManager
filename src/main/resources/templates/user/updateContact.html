@@ -29,7 +29,7 @@
 				</div>
 				<div class="form-wrapper align-items-center">
 					<div class="form sign-in">
-						<form enctype="multipart/form-data" th:action="@{/user/processUpdateContact}" method="POST" th:object="${contact}" class="mt-2">
+						<form enctype="multipart/form-data" th:action="@{'/user/processUpdateContact/'+${page}}" method="POST" th:object="${contact}" class="mt-2">
 							<input type="hidden" th:value="${contact.Id}" name="Id" />
 							<div class="input-group">
 								<i class='bx bxs-user'></i>
@@ -44,7 +44,7 @@
 								<input type="text" id="phone" name="phone" placeholder="Phone Number" th:value="${contact.phone}" required>
 							</div>
 							<div class="input-group">
-								<textarea style="width:100%;" placeholder="Description" name="description" id="mytextarea" rows="5" th:value="${contact.description}"></textarea>
+								<textarea style="width:100%;" placeholder="Description" name="description" id="mytextarea" rows="5" th:placeholder="${contact.description}"></textarea>
 							</div>
 							<div class="input-group custom-file">
 								<i class='bx bx-image-add'></i>

@@ -1,9 +1,17 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:fragment="Layout(content)">
+<head>
 <link rel="stylesheet" th:href="@{/css/error-500.css}" />
-<div class="wrapper">
-<div class="box">
-<h1>500</h1>
-<p>Sorry, it's me, not you.</p>
-<p>&#58;&#40;</p>
-<p><a href="/user/index">Let me try again!</a></p>
-</div>
-</div>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="box">
+            <h1>500</h1>
+            <p>Sorry, it's me, not you.</p>
+            <p>&#58;&#40;</p>
+            <p><a href="/signIn">Let me try again!</a></p>
+        </div>
+    </div>
+</body>
+</html>

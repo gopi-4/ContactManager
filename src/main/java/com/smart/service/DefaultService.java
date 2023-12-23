@@ -47,7 +47,7 @@ public class DefaultService {
 			user.setAuthProvider(AuthenticationProvider.LOCAL);
 			user.setImage(imageService.getDefault());
 
-			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail());
+			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail()+"/true");
 
 			this.userRepository.save(user);
 
@@ -68,7 +68,7 @@ public class DefaultService {
 			User user = this.userRepository.getUserByEmail(username).orElse(null);
 			if(user==null) {
 				session.setAttribute("message", new Message("User not Exist..", "danger"));
-				return "new/forgotPassword.html";
+				return "default/forgotPassword.html";
 			}else {
 
 				int randomPin   =(int) (Math.random()*9000)+1000;
@@ -80,13 +80,13 @@ public class DefaultService {
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {
 					session.setAttribute("oldOTP", randomPin);
-					session.setAttribute("user", user);
+					session.setAttribute("session_user_Id", user.getId());
 					session.setAttribute("newPassword", newPassword);
 					model.addAttribute("title", "OTP");
-					return "new/otp.html";
+					return "default/otp.html";
 				}else {
 					session.setAttribute("message", new Message("Error Sending mail..", "danger"));
-					return "new/forgotPassword.html";
+					return "default/forgotPassword.html";
 				}
 			}
 		} catch (Exception e) {

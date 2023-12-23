@@ -71,12 +71,12 @@ public class UserController {
 		return userService.viewContacts(page, model, session);
 	}
 
-	@GetMapping("/updateContact/{Id}")
-	public String updateContact(@PathVariable("Id") Integer Id, Model model) {
-		return userService.updateContact(Id, model);
+	@GetMapping("/updateContact/{Id}/{page}")
+	public String updateContact(@PathVariable("Id") Integer Id, Model model, @PathVariable("page") Integer page) {
+		return userService.updateContact(Id, model, page);
 	}
 
-	@PostMapping("/processUpdateContact")
+	@PostMapping("/processUpdateContact/{page}")
 	public String updateContactHandler(@ModelAttribute Contact newContact,
 									   @RequestParam("profileImage") MultipartFile file,
 									   HttpSession session, @PathVariable("page") Integer page) {

@@ -29,6 +29,5 @@ public class Contact {
 	@JoinColumn(name = "user_id")
 	private Integer userId;
 	private boolean status;
-
 	private boolean isRegister;
 }
