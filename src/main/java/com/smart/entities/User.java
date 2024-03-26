@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @ToString
@@ -36,4 +38,10 @@ public class User {
 	private boolean status;
 	@Enumerated(EnumType.STRING)
 	private AuthenticationProvider authProvider;
+	private int index;
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.email);
+	}
 }

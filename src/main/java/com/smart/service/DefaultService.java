@@ -28,7 +28,6 @@ public class DefaultService {
 	private EmailService emailService;
 	@Autowired
 	private ImageService imageService;
-
 	RestTemplate restTemplate = new RestTemplate();
 
 	public String register(String username, String email, String password, Model model, HttpSession session) {
@@ -80,7 +79,7 @@ public class DefaultService {
 				boolean flag = this.emailService.sendEmail(subject, message, to);
 				if (flag) {
 					session.setAttribute("oldOTP", randomPin);
-					session.setAttribute("session_user_Id", user.getId());
+					session.setAttribute("session_user", user);
 					session.setAttribute("newPassword", newPassword);
 					model.addAttribute("title", "OTP");
 					return "default/otp.html";
@@ -99,9 +98,8 @@ public class DefaultService {
 	public String OTPVerification(int UserOTP, HttpSession session, Model model) {
 		
 		int OTP = (int)session.getAttribute("oldOTP");
-		Integer userId = (Integer) session.getAttribute("session_user_Id");
-		User user =  restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
-		assert user!=null;
+		User user = (User) session.getAttribute("session_user");
+
 		String newPassword = (String)session.getAttribute("newPassword");
 		if (OTP == UserOTP) {
 			model.addAttribute("title", "SignIn - Smart Contact Manager");

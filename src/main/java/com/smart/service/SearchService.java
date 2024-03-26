@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class SearchService {
@@ -24,14 +23,12 @@ public class SearchService {
 	private ContactRepository contactRepository;
 	@Autowired
 	private UserRepository userRepository;
-	RestTemplate restTemplate = new RestTemplate();
 
 	public String searchContact(Integer page, String contactName, HttpSession session, Model model){
 
 		try {
-			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
-			assert user != null;
+			User user = (User) session.getAttribute("session_user");
+
 			Pageable pageable = PageRequest.of(page, 5);
 			Page<Contact> contacts = this.contactRepository.findByNameContainingAndUserId(contactName, user.getId(), pageable);
 
@@ -54,8 +51,7 @@ public class SearchService {
 		
 		try {
 
-			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User admin = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+			User admin = (User) session.getAttribute("session_user");
 
 			Pageable pageable = PageRequest.of(page, 5);
 			Page<User> users = this.userRepository.findByNameContainingAndRole(contactName, Role.ROLE_USER, pageable);

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -16,9 +17,13 @@ public class SecurityConfiguration {
 
     @Autowired
     private CustomOAuth2UserService oAuth2UserService;
-
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+    @Autowired
+    private SessionRegistry sessionRegistry;
+
     private final String[] WHITE_LIST_URL = {
             "/oauth2/**",
             "/v3/api-docs",
@@ -26,8 +31,16 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/webjars/**",
+            "/css/**",
+            "/images/**",
+            "/videos/**",
+            "/actuator/**",
+            "/**",
             "/signIn",
-            "/**"
+            "/forgotPassword",
+            "/registration",
+            "/passwordUpdate",
+            "/otpVerify"
     };
 
     private final String[] USER_URL = {
@@ -39,9 +52,6 @@ public class SecurityConfiguration {
             "/admin/**",
             "/chat/admin/**"
     };
-
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -82,6 +92,7 @@ public class SecurityConfiguration {
                         session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                                 .maximumSessions(1)
+                                .sessionRegistry(sessionRegistry)
                                 .expiredUrl("/signIn")
                 )
                 .build();

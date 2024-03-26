@@ -1,7 +1,7 @@
 package com.smart.service;
 
 import com.smart.entities.Contact;
-import com.smart.entities.Messages;
+import com.smart.entities.Message;
 import com.smart.entities.User;
 import com.smart.repository.MessageRepository;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +21,7 @@ import java.util.Optional;
 public class ChatService {
 
 	private final Logger logger = LogManager.getLogger(ChatService.class);
+
 	@Autowired
 	private MessageRepository messageRepository;
 
@@ -31,22 +32,19 @@ public class ChatService {
 		Contact contact = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getContact/"+Id, Contact.class).getBody();
 		if(contact==null) return "redirect:/user/viewContacts/0";
 		model.addAttribute("contact", contact);
-		model.addAttribute("status", contact.isStatus());
 		return "default/chat";
 	}
 
 	public ResponseEntity<Optional<String>> getChat(Integer incoming, HttpSession session){
 
-		Integer userId = (Integer) session.getAttribute("session_user_Id");
-		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+		User user = (User) session.getAttribute("session_user");
 
-		assert user != null;
 		int outgoing = user.getId();
 		StringBuilder sb = new StringBuilder();
 		
-		List<Messages> messages = this.messageRepository.findMessages(outgoing, incoming);
+		List<Message> messages = this.messageRepository.findMessages(outgoing, incoming);
 		if(messages.size()>0) {
-			for (Messages message : messages) {
+			for (Message message : messages) {
 				if (message.getOutgoing() == outgoing) {
 					sb.append("<div class=chat-outgoing><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				} else {
@@ -60,13 +58,13 @@ public class ChatService {
 		
 	}
 
-	public ResponseEntity<Messages> insertChat(Integer outgoing, Integer incoming, String message){
+	public ResponseEntity<Message> insertChat(Integer outgoing, Integer incoming, String message){
 		
-		Messages messages;
+		Message messages;
 		if(message.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
-		messages = this.messageRepository.save(new Messages(incoming, outgoing, message));
+		messages = this.messageRepository.save(new Message(incoming, outgoing, message));
 		return ResponseEntity.of(Optional.of(messages));
 	}
 
@@ -76,21 +74,19 @@ public class ChatService {
 		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+Id, User.class).getBody();
 		if(user==null) return "redirect:/admin/viewUsers/0";
 		model.addAttribute("contact", user);
-		model.addAttribute("status", user.isStatus());
 		return "admin/chat";
 	}
 
 	public ResponseEntity<Optional<String>> adminGetChat(Integer incoming, HttpSession session){
 
-		Integer userId = (Integer) session.getAttribute("session_user_Id");
-		User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
-		assert user != null;
+		User user = (User) session.getAttribute("session_user");
+
 		int outgoing = user.getId();
 		StringBuilder sb = new StringBuilder();
 		
-		List<Messages> messages = this.messageRepository.findMessages(outgoing, incoming);
+		List<Message> messages = this.messageRepository.findMessages(outgoing, incoming);
 		if(messages.size()>0) {
-			for (Messages message : messages) {
+			for (Message message : messages) {
 				if (message.getOutgoing() == outgoing) {
 					sb.append("<div class=chat-outgoing><div class=details><p>").append(message.getMsg()).append("</p></div></div>");
 				} else {
@@ -104,10 +100,10 @@ public class ChatService {
 		
 	}
 
-	public ResponseEntity<Messages> adminInsertChat(Integer outgoing, Integer incoming, String message){
-		Messages messages;
+	public ResponseEntity<Message> adminInsertChat(Integer outgoing, Integer incoming, String message){
+		Message messages;
 		if(message.isEmpty()) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		messages = this.messageRepository.save(new Messages(incoming, outgoing, message));
+		messages = this.messageRepository.save(new Message(incoming, outgoing, message));
 		return ResponseEntity.of(Optional.of(messages));
 	}
 

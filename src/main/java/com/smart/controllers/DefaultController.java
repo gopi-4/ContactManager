@@ -15,9 +15,10 @@ public class DefaultController {
 	private DefaultService defaultService;
 
 	@RequestMapping("/")
-	public String home(Model model) {
+	public String home(Model model, HttpSession session) {
 		model.addAttribute("user", new User());
 		model.addAttribute("title", "Smart Contact Manager");
+		if(session.getAttribute("session_user")!=null) return "redirect:/user/index";
 		return "default/home";
 	}
 

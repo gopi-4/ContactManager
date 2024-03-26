@@ -1,6 +1,6 @@
 package com.smart.controllers;
 
-import com.smart.entities.Messages;
+import com.smart.entities.Message;
 import com.smart.entities.User;
 import com.smart.service.ChatService;
 import jakarta.servlet.http.HttpSession;
@@ -28,8 +28,7 @@ public class ChatController {
 	@ModelAttribute
 	private void addCommonData(Model model, HttpSession session) {
 		try {
-			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+			User user = (User) session.getAttribute("session_user");
 			model.addAttribute("admin", user);
 			model.addAttribute("user", user);
 		}catch (Exception e) {
@@ -48,7 +47,7 @@ public class ChatController {
 	}
 	
 	@PostMapping("/insertChat")
-	public ResponseEntity<Messages> insertChat(@RequestParam("outgoing") Integer outgoing, @RequestParam("incoming") Integer incoming, @RequestParam("message") String message){
+	public ResponseEntity<Message> insertChat(@RequestParam("outgoing") Integer outgoing, @RequestParam("incoming") Integer incoming, @RequestParam("message") String message){
 		return chatService.insertChat(outgoing, incoming, message);
 	}
 	
@@ -63,7 +62,7 @@ public class ChatController {
 	}
 	
 	@PostMapping("/admin/insertChat")
-	public ResponseEntity<Messages> adminInsertChat(@RequestParam("outgoing") Integer outgoing, @RequestParam("incoming") Integer incoming, @RequestParam("message") String message){
+	public ResponseEntity<Message> adminInsertChat(@RequestParam("outgoing") Integer outgoing, @RequestParam("incoming") Integer incoming, @RequestParam("message") String message){
 		return chatService.adminInsertChat(outgoing, incoming, message);
 	}
 	

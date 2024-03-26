@@ -2,6 +2,7 @@ package com.smart.service;
 
 import com.smart.entities.User;
 import com.smart.enums.Role;
+import com.smart.repository.ContactRepository;
 import com.smart.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -19,23 +20,24 @@ public class RedirectService {
     private final Logger logger = LogManager.getLogger(RedirectService.class);
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ContactRepository contactRepository;
 
     @GetMapping("/")
     public String redirect(Principal principal, Model model, HttpSession session) {
 
         User user = this.userRepository.getUserByEmail(principal.getName()).orElse(null);
+
         assert user != null;
-        StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/updateContactStatus/"+user.getId()+"/true");
-
         user.setStatus(true);
-        this.userRepository.save(user);
-
-        session.setAttribute("session_user_Id", user.getId());
+        session.setAttribute("session_user", user);
 
         if(user.getRole().equals(Role.ROLE_ADMIN)) {
+            session.setAttribute("users", this.userRepository.findByRole(Role.ROLE_USER));
             logger.info("ADMIN LOGIN.");
             return "redirect:/admin/index";
         }
+        session.setAttribute("contacts", this.contactRepository.findContactsByUserId(user.getId()));
         logger.info("USER LOGIN.");
         return "redirect:/user/index";
     }

@@ -14,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "_message")
-public class Messages {
+public class Message {
 
 	@Id
 	@GeneratedValue()
@@ -26,7 +26,7 @@ public class Messages {
 	
 	private String msg;
 
-	public Messages(int incoming, int outgoing, String msg) {
+	public Message(int incoming, int outgoing, String msg) {
 		this.incoming = incoming;
 		this.outgoing = outgoing;
 		this.msg = msg;

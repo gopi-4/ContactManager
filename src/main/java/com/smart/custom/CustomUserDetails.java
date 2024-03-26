@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomUserDetails implements UserDetails{
 	private final User user;
@@ -50,5 +51,16 @@ public class CustomUserDetails implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "CustomUserDetails{" +
+				"user=" + user +
+				'}';
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(user.getEmail());
+	}
 }

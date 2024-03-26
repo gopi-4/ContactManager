@@ -1,18 +1,23 @@
 package com.smart.configuraton;
 
-import com.smart.service.StaticServices;
+import com.smart.entities.Contact;
+import com.smart.entities.User;
+import com.smart.enums.Role;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @WebListener
 public class CustomSessionListener implements HttpSessionListener {
     private static final Logger logger = LogManager.getLogger(CustomSessionListener.class);
     private final AtomicInteger counter = new AtomicInteger();
+    RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public void sessionCreated(HttpSessionEvent event) {
@@ -24,9 +29,12 @@ public class CustomSessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
         try {
-            Integer userId = (Integer) event.getSession().getAttribute("session_user_Id");
-            StaticServices.getApiCall("http://localhost:8585/logOut/"+userId);
-            StaticServices.getApiCall("http://localhost:8585/updateContactStatus/"+userId+"/false");
+            User user = (User) event.getSession().getAttribute("session_user");
+            List<Contact> contacts = (List<Contact>) event.getSession().getAttribute("contacts");
+            List<User> users = (List<User>) event.getSession().getAttribute("users");
+            restTemplate.postForEntity("http://localhost:8585/logOut", user, User.class);
+            if(user.getRole().equals(Role.ROLE_USER)) restTemplate.postForEntity("http://localhost:8585/saveAllContacts", contacts, List.class);
+            else restTemplate.postForEntity("http://localhost:8585/saveAllUsers", users, List.class);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }

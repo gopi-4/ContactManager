@@ -3,19 +3,15 @@ package com.smart.service;
 import com.smart.dto.Message;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
-import com.smart.enums.Role;
 import com.smart.repository.ContactRepository;
-import com.smart.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -24,22 +20,24 @@ public class AdminService {
 
 	private final Logger logger = LogManager.getLogger(AdminService.class);
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private ContactRepository contactRepository;
 	@Autowired
 	private ImageService imageService;
+	@Autowired
+	private SessionRegistry sessionRegistry;
 
-	RestTemplate restTemplate = new RestTemplate();
+	public String viewUsers(Integer page, Model model, HttpSession session) {
 
-	public String viewUsers(Integer page, Model model) {
 		model.addAttribute("title", "Error");
 		try {
 
-			Pageable pageable = PageRequest.of(page, 5);
-			Page<User> users = this.userRepository.findByRole(Role.ROLE_USER, pageable);
+			List<Integer> online_users = sessionRegistry.getAllPrincipals().stream()
+					.filter(u -> !sessionRegistry.getAllSessions(u, false).isEmpty())
+					.map(Object::hashCode)
+					.toList();
 
-			assert users != null;
+			Page<User> users = StaticServices.getUsers(page, session, online_users);
+
 			if (page <= users.getTotalPages() && page >= 0) {
 				model.addAttribute("users", users);
 				model.addAttribute("currentPage", page);
@@ -52,15 +50,21 @@ public class AdminService {
 		return "admin/viewUsers";
 	}
 
-	public String deleteUser(Integer Id, HttpSession session) {
+	public String deleteUser(Integer index, HttpSession session) {
 		try {
-			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+Id, User.class).getBody();
-			assert user != null;
+
+			List<User> users = (List<User>) session.getAttribute("users");
+			User user = users.get(index);
+
 			this.imageService.delete(user.getImage().getPublic_id());
-			List<Contact> contacts = this.contactRepository.findContactsByUserId(Id);
+
+			List<Contact> contacts = this.contactRepository.findContactsByUserId(user.getId());
 			for(Contact contact : contacts) this.imageService.delete(contact.getImage().getPublic_id());
-			this.contactRepository.deleteByUserId(Id);
-			restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/deleteUser/"+Id, Void.class);
+			this.contactRepository.deleteByUserId(user.getId());
+
+			users.remove(user);
+			session.setAttribute("users", users);
+
 			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail()+"/false");
 			session.setAttribute("message", new Message("User Deleted Successfully...", "success"));
 			logger.info(user.getEmail()+" Deleted.");

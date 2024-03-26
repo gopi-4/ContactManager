@@ -29,6 +29,9 @@
 <!--BOX-ICON-->
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+<!--CHAT-BOX-->
+<link href="https://webchat-styler-css.botpress.app/prod/fa2e58ba-e8a5-46c3-bbb5-374037e5b482/v75322/style.css" rel="stylesheet">
+
 <title th:text="${title}">Smart Contact Manager</title>
 </head>
 
@@ -54,8 +57,6 @@
 						aria-current="page" th:href="@{/}">Home</a></li>
 					<li class="nav-item"><a class="nav-link btn"
 						data-bs-toggle="modal" data-bs-target="#exampleModal">about</a></li>
-<!--					<li class="nav-item"><a class="nav-link" th:href="@{/signIn}">LogIn</a></li>-->
-<!--					<li class="nav-item"><a class="nav-link" th:href="@{/signUp}">SignUp</a></li>-->
 				</ul>
 			</div>
 
@@ -150,7 +151,24 @@
         }
     </script>
 
-	<!-- <script th:src="@{/js/script.js}" crossorigin="anonymous"></script> -->
+	<script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
+	<script>
+		window.botpressWebChat.init({
+		  "composerPlaceholder": "Chat with bot",
+		  "botConversationDescription": "This chatbot was built surprisingly fast with Botpress",
+		  "botId": "869c6853-3ebd-4a41-8ade-2c9cdfa53699",
+		  "hostUrl": "https://cdn.botpress.cloud/webchat/v1",
+		  "messagingUrl": "https://messaging.botpress.cloud",
+		  "clientId": "869c6853-3ebd-4a41-8ade-2c9cdfa53699",
+		  "webhookId": "eff3df25-c72c-4f61-ac7c-f512af3d1cbc",
+		  "lazySocket": true,
+		  "themeName": "prism",
+		  "frontendVersion": "v1",
+		  "showPoweredBy": true,
+		  "theme": "prism",
+		  "themeColor": "#2563eb"
+		});
+		</script>
 
 </body>
 <!--END BODY-->

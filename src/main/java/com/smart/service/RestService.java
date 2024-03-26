@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
@@ -26,34 +25,13 @@ public class RestService {
     @Autowired
     private ContactRepository contactRepository;
 
-    RestTemplate restTemplate = new RestTemplate();
-
     @Async("asyncTaskExecutor")
-    public void logout(Integer userId) {
+    public void logout(User user) {
         try {
-            User user = this.userRepository.findById(userId).orElse(null);
-            assert user != null;
             user.setStatus(false);
             user.setDate(new Date().toString());
-            restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateUser", user, User.class);
+            updateUser(user);
             logger.info(user.getEmail()+" LogOut.");
-        }catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    @Async("asyncTaskExecutor")
-    public void updateContactStatusByUserEmail(int Id, boolean status) {
-        try {
-            String email = getUser(Id).getEmail();
-            List<Contact> contacts = contactRepository.getContactByEmail(email);
-            if (contacts!=null) {
-                for (Contact contact : contacts) {
-                    contact.setStatus(status);
-                    restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateContact", contact, Contact.class);
-                }
-            }
-            logger.info(email.toUpperCase()+" Contact status updated to "+status);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -66,7 +44,7 @@ public class RestService {
             if(contacts!=null) {
                 for (Contact contact : contacts) {
                     contact.setRegister(status);
-                    restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/updateContact", contact, Contact.class);
+                    updateContact(contact);
                 }
             }
             logger.info("Registration Status of Contact's Changed Successfully for "+email.toUpperCase());
@@ -105,5 +83,15 @@ public class RestService {
     @CacheEvict(cacheNames = "contacts", key = "#Id", allEntries = true, beforeInvocation = true)
     public void deleteContactById(int Id) {
         this.contactRepository.deleteById(Id);
+    }
+
+    @Async("asyncTaskExecutor")
+    public void saveAllContacts(List<Contact> contacts) {
+        this.contactRepository.saveAll(contacts);
+    }
+
+    @Async("asyncTaskExecutor")
+    public void saveAllUsers(List<User> users) {
+        this.userRepository.saveAll(users);
     }
 }

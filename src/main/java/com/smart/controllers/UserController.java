@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -24,13 +23,10 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	RestTemplate restTemplate = new RestTemplate();
-
 	@ModelAttribute
 	private void addCommonData(Model model, HttpSession session){
 		try {
-			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+			User user = (User) session.getAttribute("session_user");
 			model.addAttribute("user", user);
 		}catch (Exception e) {
 			logger.error(e.getMessage());
@@ -71,9 +67,9 @@ public class UserController {
 		return userService.viewContacts(page, model, session);
 	}
 
-	@GetMapping("/updateContact/{Id}/{page}")
-	public String updateContact(@PathVariable("Id") Integer Id, Model model, @PathVariable("page") Integer page) {
-		return userService.updateContact(Id, model, page);
+	@GetMapping("/updateContact/{index}/{page}")
+	public String updateContact(@PathVariable("index") Integer index, Model model, @PathVariable("page") Integer page, HttpSession session) {
+		return userService.updateContact(index, model, page, session);
 	}
 
 	@PostMapping("/processUpdateContact/{page}")
@@ -84,9 +80,9 @@ public class UserController {
 		return userService.updateContactHandler(newContact, file, session, page);
 	}
 
-	@GetMapping("/delete/{Id}")
-	public String deleteContact(@PathVariable("Id") Integer Id, HttpSession session) {
-		return userService.deleteContact(Id, session);
+	@GetMapping("/delete/{index}")
+	public String deleteContact(@PathVariable("index") Integer index, HttpSession session) {
+		return userService.deleteContact(index, session);
 	}
 
 	@PostMapping("/processUpdateUser")

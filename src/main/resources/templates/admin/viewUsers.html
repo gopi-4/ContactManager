@@ -43,7 +43,7 @@
 								</div>
 								<div style="display: flex; justify-content: space-between;">
 									<span><a class="btn" th:target="_blank" th:href="@{'/chat/admin/'+${c.Id}}"><i class='bx bx-chat' style="font-size: 22px;"></i></a></span>
-									<span><a class="btn" th:onclick="|deleteUser(${c.Id})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
+									<span><a class="btn" th:onclick="|deleteUser(${c.index})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
 								</div>
 							</div>
 						</div>
@@ -125,7 +125,7 @@
 	</script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script>
-		function deleteUser(Id){
+		function deleteUser(index){
 			swal({
 				  title: "Are you sure?",
 				  text: "Once deleted, you will not be able to recover this contact!",
@@ -135,7 +135,7 @@
 				})
 				.then((willDelete) => {
 				  if (willDelete) {
-					  window.location="/admin/deleteUser/"+Id;
+					  window.location="/admin/deleteUser/"+index;
 					  /* swal("Poof! Your imaginary file has been deleted!", {
 					  icon: "success",
 					}); */

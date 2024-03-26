@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @ToString
@@ -30,4 +32,10 @@ public class Contact {
 	private Integer userId;
 	private boolean status;
 	private boolean isRegister;
+	private int index;
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.email);
+	}
 }

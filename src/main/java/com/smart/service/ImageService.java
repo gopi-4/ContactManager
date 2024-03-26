@@ -25,7 +25,7 @@ public class ImageService {
         try {
             Map data = this.cloudinary.uploader().upload(file.getBytes(), Map.of());
             Image image = new Image(data);
-            logger.info(image);
+//            logger.info(image);
             return image;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -36,7 +36,7 @@ public class ImageService {
         try {
             Map data = cloudinary.api().resourceByAssetID("85c1e82b140fb068250632cd812eafff", ObjectUtils.emptyMap());
             Image image = new Image(data);
-            logger.info(image);
+//            logger.info(image);
             return image;
         }catch (Exception e) {
             logger.error(e.getMessage());
@@ -48,7 +48,7 @@ public class ImageService {
         try {
             ApiResponse apiResponse = null;
             if(!publicId.equals("ioy7gourm6mefsz1q3bd")) apiResponse = cloudinary.api().deleteResources(Collections.singletonList(publicId), ObjectUtils.asMap("type", "upload", "resource_type", "image"));
-            logger.info(apiResponse);
+//            logger.info(apiResponse);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }

@@ -1,15 +1,16 @@
 package com.smart.oauth2;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+
 public class CustomOAuth2User implements OAuth2User {
 
-	private OAuth2User oauth2User;
-	private String authProvider;
+	private final OAuth2User oauth2User;
+	private final String authProvider;
 	
 	public CustomOAuth2User(OAuth2User oauth2User, String authProvider) {
 		this.oauth2User = oauth2User;
@@ -65,5 +66,10 @@ public class CustomOAuth2User implements OAuth2User {
 
 	public String getAbout() {
 		return oauth2User.getAttribute("about");
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName());
 	}
 }

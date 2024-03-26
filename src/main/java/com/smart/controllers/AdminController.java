@@ -20,17 +20,15 @@ import java.security.Principal;
 @RequestMapping("/admin")
 public class AdminController {
 
-	private final Logger logger = LogManager.getLogger(UserController.class);
+	private final Logger logger = LogManager.getLogger(AdminController.class);
 	@Autowired
 	private AdminService adminService;
-
 	RestTemplate restTemplate = new RestTemplate();
 
 	@ModelAttribute
 	private void addCommonData(Model model, HttpSession session) {
 		try {
-			Integer userId = (Integer) session.getAttribute("session_user_Id");
-			User user = restTemplate.getForEntity("https://contactmanager-3c3x.onrender.com/getUser/"+userId, User.class).getBody();
+			User user = (User) session.getAttribute("session_user");
 			model.addAttribute("admin", user);
 		}catch (Exception e) {
 			logger.error(e.getMessage());
@@ -49,13 +47,13 @@ public class AdminController {
 	}
 
 	@GetMapping("/viewUsers/{page}")
-	public String viewUsers(@PathVariable("page") Integer page, Model model) {
-		return adminService.viewUsers(page, model);
+	public String viewUsers(@PathVariable("page") Integer page, Model model, HttpSession session) {
+		return adminService.viewUsers(page, model, session);
 	}
 	
-	@GetMapping("/deleteUser/{Id}")
-	public String deleteUser(@PathVariable("Id") Integer Id, HttpSession session) {
-		return adminService.deleteUser(Id, session);
+	@GetMapping("/deleteUser/{index}")
+	public String deleteUser(@PathVariable("index") Integer index, HttpSession session) {
+		return adminService.deleteUser(index, session);
 	}
 	
 	@GetMapping("/signOut")

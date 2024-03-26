@@ -34,18 +34,18 @@
 							</div>
 							<div class="input-group">
 								<i class='bx bx-id-card'></i>
-								<input type="text" id="Id" name="username" th:value="${admin.Id}" placeholder="Id" readonly>
+								<input type="text" id="Id" name="username" th:placeholder="${admin.Id}" placeholder="Id" readonly>
 							</div>
 							<div class="input-group">
 								<i class='bx bxs-user'></i>
-								<input type="text" id="login_username" name="username" th:value="${admin.name}" placeholder="Username" readonly>
+								<input type="text" id="login_username" name="username" th:placeholder="${admin.name}" placeholder="Username" readonly>
 							</div>
 							<div class="input-group">
 								<i class='bx bx-mail-send'></i>
-								<input type="email"  id="email" name="email" placeholder="Email" th:value="${admin.email}" readonly>
+								<input type="email"  id="email" name="email" th:placeholder="${admin.email}" placeholder="Email" readonly>
 							</div>
 							<div class="input-group">
-								<textarea style="width:100%;" placeholder="About" name="about" id="mytextarea" rows="5" th:value="${admin.about}" readonly></textarea>
+								<textarea style="width:100%;" name="about" id="mytextarea" rows="5" th:placeholder="${admin.about}" placeholder="About" readonly></textarea>
 							</div>
 						</form>
 					</div>
