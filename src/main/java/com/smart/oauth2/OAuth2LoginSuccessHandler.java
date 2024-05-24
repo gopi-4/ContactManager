@@ -46,6 +46,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			newUser.setStatus(false);
 			newUser.setDate(new Date().toString());
 			newUser.setImage(imageService.getDefault());
+			newUser.setVerified(true);
 			
 			if (authProvider.equals("Facebook")) {
 				newUser.setAuthProvider(AuthenticationProvider.FACEBOOK);

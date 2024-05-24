@@ -28,7 +28,7 @@ public class RedirectService {
         User user = this.userRepository.getUserByEmail(principal.getName()).orElse(null);
 
         assert user != null;
-        if(!user.isVerified() && user.getAuthProvider().toString().equals("LOCAL")) {
+        if(!user.isVerified()) {
             session.setAttribute("message", new Message("Please Verify Email..", "alert-danger"));
             return "redirect:/signIn";
         }
