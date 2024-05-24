@@ -1,11 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{user/base::Layout(~{::section})}">>
+<html lang="en" th:replace="~{user/base::Layout(~{::section})}" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="UTF-8" />
-<title>Home - Smart Contact Manager</title>
 </head>
 <body>
-	<section style="height: 100vh; display: flex; justify-content: flex-end;" class="">
+	<section style="height: 100vh; display: flex; justify-content: flex-end;">
 		<div id="container" class="container sign-in">
 			<div class="row">
 				<!-- DUMMY -->
@@ -40,12 +38,12 @@
 								<div>
 									<div style="display: flex; justify-content: space-between;">
 										<span class="contact-status" style="font-family: monaco; font-weight: 80; font-size: 22px;" th:text="${c.status} ? 'Online' : 'Offline'"></span>
-										<span><a class="btn" th:href="@{'/user/updateContact/'+${c.index}+'/'+${currentPage}}"><i class='bx bx-edit' style="font-size: 22px;"></i></a></span>
+										<span><a class="btn" th:href="@{'/user/updateContact/'+${c.position}+'/'+${currentPage}}"><i class='bx bx-edit' style="font-size: 22px;"></i></a></span>
 									</div>
 									<div style="display: flex; justify-content: space-between;">
 										<span><a th:if="${c.isRegister}" class="btn" th:target="_blank" th:href="@{'/chat/'+${c.Id}}"><i class='bx bx-chat' style="font-size: 22px;"></i></a></span>
 										<span><a th:if="${not c.isRegister}" class="btn" th:href="@{'/user/invite/'+${user.name}+'/'+${c.Id}}+'/'+${currentPage}"><i class='bx bxl-telegram' style="font-size: 22px;"></i></a></span>
-										<span><a class="btn" th:onclick="|deleteContact(${c.index})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
+										<span><a class="btn" th:onclick="|deleteContact(${c.position})|"><i class="fas fa-trash-alt" style="font-size: 22px;"></i></a></span>
 									</div>
 								</div>
 							</div>
@@ -127,7 +125,7 @@
 		</script>
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script>
-			function deleteContact(index){
+			function deleteContact(position){
 				swal({
 					  title: "Are you sure?",
 					  text: "Once deleted, you will not be able to recover this contact!",
@@ -137,7 +135,7 @@
 					})
 					.then((willDelete) => {
 					  if (willDelete) {
-					      window.location="/user/delete/"+index;
+					      window.location="/user/delete/"+position;
 						  /* swal("Poof! Your imaginary file has been deleted!", {
 					      icon: "success",
 					    }); */

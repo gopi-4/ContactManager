@@ -66,11 +66,11 @@ public class AdminService {
 			session.setAttribute("users", users);
 
 			StaticServices.getApiCall("https://contactmanager-3c3x.onrender.com/contactRegistrationStatus/"+user.getEmail()+"/false");
-			session.setAttribute("message", new Message("User Deleted Successfully...", "success"));
+			session.setAttribute("message", new Message("User Deleted Successfully...", "alert-success"));
 			logger.info(user.getEmail()+" Deleted.");
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			session.setAttribute("message", new Message("Error Deleting Contact...", "danger"));
+			session.setAttribute("message", new Message("Error Deleting Contact...", "alert-danger"));
 		}
 		return "redirect:/admin/viewUsers/0";
 	}

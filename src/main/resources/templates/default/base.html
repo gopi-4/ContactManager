@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="Layout(content)">
+<html lang="en" th:fragment="Layout(content)" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <!-- Required meta tags -->
 <meta charset="utf-8" />
@@ -32,14 +32,12 @@
 <!--CHAT-BOX-->
 <!--<link href="https://webchat-styler-css.botpress.app/prod/fa2e58ba-e8a5-46c3-bbb5-374037e5b482/v75322/style.css" rel="stylesheet">-->
 
-<title th:text="${title}">Smart Contact Manager</title>
+<title th:text="${title}">Contact Manager</title>
 </head>
 
 <!--BODY-->
 <body onload="show()">
-
 	<div id="preloader"></div>
-
 	<!-- navbar -->
 	<nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-primary">
 		<div class="container-fluid">
@@ -77,17 +75,15 @@
 		</div>
 	</nav>
 	<!-- navbar ends -->
-
-	<div th:replace="${content}"></div>
-
+	<div class="content mt-5">
+		<div th:replace="${content}"></div>
+	</div>
 	<!-- Optional JavaScript; choose one of the two! -->
-
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	 <script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
-
 	<!-- Option 2: Separate Popper and Bootstrap JS -->
 	<!-- <script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
@@ -101,7 +97,6 @@
 
 	<script>
 		var preloader = document.getElementById('preloader');
-
 		function show() {
 			preloader.style.display = 'none';
 		}
@@ -109,12 +104,10 @@
 
 	<script>
 		let container = document.getElementById('container')
-
 		toggle = () => {
 			container.classList.toggle('sign-in')
 			container.classList.toggle('sign-up')
 		}
-
 		setTimeout(() => {
 			container.classList.add('sign-in')
 		}, 200)
@@ -128,28 +121,31 @@
                 document.getElementById('wrong_pass_alert').style.color = 'red';
                 document.getElementById('wrong_pass_alert').innerHTML
                     = '☒ Use same password';
-                document.getElementById('create').disabled = true;
-                document.getElementById('create').style.opacity = (0.4);
                 document.getElementById("signupbtn").disabled = true;
             } else {
                 document.getElementById('wrong_pass_alert').style.color = 'green';
                 document.getElementById('wrong_pass_alert').innerHTML =
                     '🗹 Password Matched';
-                document.getElementById('create').disabled = false;
-                document.getElementById('create').style.opacity = (1);
-                 document.getElementById("signupbtn").disabled = false;
-            }
-        }
-
-        function wrong_pass_alert() {
-            if (document.getElementById('password_field').value != "" &&
-                document.getElementById('confirm_password_field').value != "") {
-                alert("Your response is submitted");
-            } else {
-                alert("Please fill all the fields");
+                document.getElementById("signupbtn").disabled = false;
             }
         }
     </script>
+
+	<script>
+		function checkPasswordStrength() {
+			var pass = document.getElementById('password_field').value;
+			var decimal=  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+			if(pass.match(decimal)) {
+				document.getElementById('wrong_pass_alert').style.color = 'green';
+				document.getElementById('wrong_pass_alert').innerHTML =
+                    '🗹 Valid';
+			}else {
+				document.getElementById('wrong_pass_alert').style.color = 'red';
+				document.getElementById('wrong_pass_alert').innerHTML =
+                    '☒ Not Valid';
+			}
+		}
+	</script>
 
 <!--	<script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>-->
 <!--	<script>-->

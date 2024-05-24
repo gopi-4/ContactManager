@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 	<div class="wrapper">
     	<section class="chat-area">
     		<header>
-			        <img src="" th:src="@{${contact.image.url}}"  alt="">
+			        <img src="#" th:src="@{${contact.image.url}}"  alt="">
 			        <div class="details">
 			          <span th:text="${contact.name}"></span>
 			          <p th:text="${contact.status}?'Online':''"></p>

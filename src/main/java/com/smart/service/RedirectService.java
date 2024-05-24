@@ -1,5 +1,6 @@
 package com.smart.service;
 
+import com.smart.dto.Message;
 import com.smart.entities.User;
 import com.smart.enums.Role;
 import com.smart.repository.ContactRepository;
@@ -10,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
 
@@ -23,12 +23,15 @@ public class RedirectService {
     @Autowired
     private ContactRepository contactRepository;
 
-    @GetMapping("/")
     public String redirect(Principal principal, Model model, HttpSession session) {
 
         User user = this.userRepository.getUserByEmail(principal.getName()).orElse(null);
 
         assert user != null;
+        if(!user.isVerified()) {
+            session.setAttribute("message", new Message("Please Verify Email..", "alert-danger"));
+            return "redirect:/signIn";
+        }
         user.setStatus(true);
         session.setAttribute("session_user", user);
 

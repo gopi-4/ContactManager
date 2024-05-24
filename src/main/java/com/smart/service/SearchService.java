@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @Service
 public class SearchService {
 
@@ -28,9 +30,10 @@ public class SearchService {
 
 		try {
 			User user = (User) session.getAttribute("session_user");
-
+			List<Contact> contact = (List<Contact>) session.getAttribute("contacts");
+			contactRepository.saveAll(contact);
 			Pageable pageable = PageRequest.of(page, 5);
-			Page<Contact> contacts = this.contactRepository.findByNameContainingAndUserId(contactName, user.getId(), pageable);
+			Page<Contact> contacts = this.contactRepository.findByNameContainingAndUserId(contactName.toLowerCase(), user.getId(), pageable);
 
 			if (page <= contacts.getTotalPages() && page >= 0) {
 				model.addAttribute("contacts", contacts);
@@ -47,14 +50,15 @@ public class SearchService {
 		return "user/viewContacts";
 	}
 
-	public String searchUser(Integer page, String contactName, HttpSession session, Model model){
+	public String searchUser(Integer page, String userName, HttpSession session, Model model){
 		
 		try {
 
 			User admin = (User) session.getAttribute("session_user");
-
+			List<User> user = (List<User>) session.getAttribute("users");
+			userRepository.saveAll(user);
 			Pageable pageable = PageRequest.of(page, 5);
-			Page<User> users = this.userRepository.findByNameContainingAndRole(contactName, Role.ROLE_USER, pageable);
+			Page<User> users = this.userRepository.findByNameContainingAndRole(userName.toLowerCase(), Role.ROLE_USER, pageable);
 
 			if (page <= users.getTotalPages() && page >= 0) {
 				model.addAttribute("users", users);

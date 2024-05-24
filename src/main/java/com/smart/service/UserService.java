@@ -56,6 +56,8 @@ public class UserService {
 
 	public String addContact(Contact contact, MultipartFile file, Model model, HttpSession session) {
 		try {
+
+			contact.setName(contact.getName().toLowerCase());
 			User user = (User) session.getAttribute("session_user");
 
 			if(file.isEmpty()) {
@@ -81,7 +83,7 @@ public class UserService {
 			session.setAttribute("message", new Message("Something Went Wrong..", "danger"));
 		}
 		model.addAttribute("title", "Add Contact");
-		return "user/addContact";
+		return "redirect:addContact";
 	}
 
 	public String viewContacts(Integer page, Model model, HttpSession session) {

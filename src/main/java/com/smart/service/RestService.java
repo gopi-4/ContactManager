@@ -87,9 +87,9 @@ public class RestService {
 
     @Async("asyncTaskExecutor")
     public void saveAllContacts(List<Contact> contacts) {
+        System.out.println(contacts);
         this.contactRepository.saveAll(contacts);
     }
-
     @Async("asyncTaskExecutor")
     public void saveAllUsers(List<User> users) {
         this.userRepository.saveAll(users);

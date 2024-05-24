@@ -34,27 +34,37 @@ public class DefaultController {
 		return "default/forgotPassword.html";
 	}
 
+	@RequestMapping("/verify")
+	public String getOTPPage(Model model) {
+		model.addAttribute("title", "Verification");
+		return "default/otp.html";
+	}
+
 	@PostMapping(value = "/registration")
 	public String register(@RequestParam("username") String username,
 						 @RequestParam("email") String email,
 						 @RequestParam("password") String password,
 						 Model model, HttpSession session) {
 
-		return defaultService.register(username, email, password, model, session);
+		return this.defaultService.register(username, email, password, model, session);
 	}
 
-	@PostMapping("/passwordUpdate")
-	public String passwordUpdate(@RequestParam("email") String username,
+	@PostMapping("/generateOTP")
+	public String generateOTP(@RequestParam("email") String username,
 								 @RequestParam("password") String password,
 								 HttpSession session,
 								 Model model) {
 
-		return defaultService.passwordUpdate(username, password,session,model);
+		return this.defaultService.generateOTP(username, password,session,model);
 	}
 	
-	@PostMapping("/otpVerify")
-	public String OTPVerify(@RequestParam("OTP") int userOTP, HttpSession session, Model model) {
-		
-		return defaultService.OTPVerification(userOTP, session, model);
+	@PostMapping("/verification")
+	public String verification(@RequestParam("OTP") int userOTP, HttpSession session, Model model) {
+		return this.defaultService.verification(userOTP, session, model);
+	}
+
+	@RequestMapping("/confirm-account")
+	public String confirmUserAccount(@RequestParam("token") String Token, HttpSession session) {
+		return this.defaultService.confirmUserAccount(Token, session);
 	}
 }

@@ -33,7 +33,7 @@ public class StaticServices {
 
         int index=0;
         for(Contact contact : contacts) {
-            contact.setIndex(index);
+            contact.setPosition(index);
             index++;
             contact.setStatus(online_users.contains(contact.hashCode()));
         }
@@ -54,7 +54,7 @@ public class StaticServices {
 
         int index=0;
         for(User user : users) {
-            user.setIndex(index);
+            user.setPosition(index);
             index++;
             user.setStatus(online_users.contains(user.hashCode()));
         }

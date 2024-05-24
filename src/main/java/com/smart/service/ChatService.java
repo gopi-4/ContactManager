@@ -55,7 +55,6 @@ public class ChatService {
 			sb.append("<div class=text>No messages are available. Once you send message they will appear here.</div>");
 		}
 		return ResponseEntity.ok(Optional.of(sb.toString()));
-		
 	}
 
 	public ResponseEntity<Message> insertChat(Integer outgoing, Integer incoming, String message){

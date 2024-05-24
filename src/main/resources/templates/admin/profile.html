@@ -1,94 +1,92 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{admin/base::Layout(~{::section})}" xmlns="http://www.w3.org/1999/html">
+<html lang="en" th:replace="~{admin/base::Layout(~{::section})}" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<meta charset="UTF-8" />
-	<title>Home - Smart Contact Manager</title>
 </head>
 <body>
-<section style="" class="">
-	<div id="container" class="container sign-in">
-		<!-- FORM SECTION -->
-		<div class="row">
-			<!-- DUMMY -->
-			<div class="col align-items-center flex-col sign-up">
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-up">
+	<section style="" class="">
+		<div id="container" class="container sign-in">
+			<!-- FORM SECTION -->
+			<div class="row">
+				<!-- DUMMY -->
+				<div class="col align-items-center flex-col sign-up">
+					<div class="form-wrapper align-items-center">
+						<div class="form sign-up">
+
+						</div>
+					</div>
+				</div>
+				<!-- END DUMMY -->
+				<!-- PROFILE -->
+				<div class="col align-items-center flex-col sign-in">
+					<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
+						<span class="text-center" th:text="${session.message.content}"></span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+					</div>
+					<div class="form-wrapper align-items-center">
+						<div class="form sign-in">
+							<form id="signin-form">
+								<!--top: -70px;-->
+								<div class="" style="align-items: center; position: relative;">
+									<img src="" style="width: 30%; height: 30%;" class="profile-picture" th:src="@{${admin.image.url}}" alt="profile photo"/>
+								</div>
+								<div class="input-group">
+									<i class='bx bx-id-card'></i>
+									<input type="text" id="Id" name="username" th:placeholder="${admin.Id}" placeholder="Id" readonly>
+								</div>
+								<div class="input-group">
+									<i class='bx bxs-user'></i>
+									<input type="text" id="login_username" name="username" th:placeholder="${admin.name}" placeholder="Username" readonly>
+								</div>
+								<div class="input-group">
+									<i class='bx bx-mail-send'></i>
+									<input type="email"  id="email" name="email" th:placeholder="${admin.email}" placeholder="Email" readonly>
+								</div>
+								<div class="input-group">
+									<textarea style="width:100%;" name="about" id="mytextarea" rows="5" th:placeholder="${admin.about}" placeholder="About" readonly></textarea>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- END PROFILE -->
+			</div>
+			<!-- END FORM SECTION -->
+			<!-- CONTENT SECTION -->
+			<div class="row content-row">
+				<!-- PROFILE CONTENT -->
+				<div class="col align-items-center flex-col">
+					<div class="text sign-in">
+						<h2>
+							My Profile
+						</h2>
+					</div>
+					<div class="img sign-in">
 
 					</div>
 				</div>
-			</div>
-			<!-- END DUMMY -->
-			<!-- PROFILE -->
-			<div class="col align-items-center flex-col sign-in">
-				<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
-					<span class="text-center" th:text="${session.message.content}"></span>
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
-				</div>
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-in">
-						<form id="signin-form">
-							<!--top: -70px;-->
-							<div class="" style="align-items: center; position: relative;">
-								<img src="" style="width: 30%; height: 30%;" class="profile-picture" th:src="@{${admin.image.url}}" alt="profile photo"/>
-							</div>
-							<div class="input-group">
-								<i class='bx bx-id-card'></i>
-								<input type="text" id="Id" name="username" th:placeholder="${admin.Id}" placeholder="Id" readonly>
-							</div>
-							<div class="input-group">
-								<i class='bx bxs-user'></i>
-								<input type="text" id="login_username" name="username" th:placeholder="${admin.name}" placeholder="Username" readonly>
-							</div>
-							<div class="input-group">
-								<i class='bx bx-mail-send'></i>
-								<input type="email"  id="email" name="email" th:placeholder="${admin.email}" placeholder="Email" readonly>
-							</div>
-							<div class="input-group">
-								<textarea style="width:100%;" name="about" id="mytextarea" rows="5" th:placeholder="${admin.about}" placeholder="About" readonly></textarea>
-							</div>
-						</form>
+				<!-- END PROFILE CONTENT -->
+				<!-- DUMMY CONTENT -->
+				<div class="col align-items-center flex-col">
+					<div class="img sign-up">
+
+					</div>
+					<div class="text sign-up">
+						<h2>
+
+						</h2>
 					</div>
 				</div>
+				<!-- END DUMMY CONTENT -->
 			</div>
-			<!-- END PROFILE -->
+			<!-- END CONTENT SECTION -->
 		</div>
-		<!-- END FORM SECTION -->
-		<!-- CONTENT SECTION -->
-		<div class="row content-row">
-			<!-- PROFILE CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="text sign-in">
-					<h2>
-						My Profile
-					</h2>
-				</div>
-				<div class="img sign-in">
-
-				</div>
-			</div>
-			<!-- END PROFILE CONTENT -->
-			<!-- DUMMY CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="img sign-up">
-
-				</div>
-				<div class="text sign-up">
-					<h2>
-
-					</h2>
-				</div>
-			</div>
-			<!-- END DUMMY CONTENT -->
-		</div>
-		<!-- END CONTENT SECTION -->
-	</div>
-	<script>
-		$(document).ready(() =>{
-			$(".item").removeClass("active");
-			$("#profile").addClass("active");
-		});
-	</script>
-</section>
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#profile").addClass("active");
+			});
+		</script>
+	</section>
 </body>
 </html>

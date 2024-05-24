@@ -32,9 +32,12 @@ public class CustomSessionListener implements HttpSessionListener {
             User user = (User) event.getSession().getAttribute("session_user");
             List<Contact> contacts = (List<Contact>) event.getSession().getAttribute("contacts");
             List<User> users = (List<User>) event.getSession().getAttribute("users");
-            restTemplate.postForEntity("http://localhost:8585/logOut", user, User.class);
-            if(user.getRole().equals(Role.ROLE_USER)) restTemplate.postForEntity("http://localhost:8585/saveAllContacts", contacts, List.class);
-            else restTemplate.postForEntity("http://localhost:8585/saveAllUsers", users, List.class);
+            restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/logOut", user, User.class);
+            if(user.getRole().equals(Role.ROLE_USER)) restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/saveAllContacts", contacts, List.class);
+            else restTemplate.postForEntity("https://contactmanager-3c3x.onrender.com/saveAllUsers", users, List.class);
+//            restTemplate.postForEntity("localhost/logOut", user, User.class);
+//            if(user.getRole().equals(Role.ROLE_USER)) restTemplate.postForEntity("localhost/saveAllContacts", contacts, List.class);
+//            else restTemplate.postForEntity("localhost/saveAllUsers", users, List.class);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }

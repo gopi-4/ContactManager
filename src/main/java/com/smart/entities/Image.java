@@ -22,7 +22,7 @@ import java.util.Map;
 public class Image {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     public Integer Id;
     public String signature;
     public String format;

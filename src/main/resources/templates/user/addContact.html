@@ -1,95 +1,93 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="~{user/base::Layout(~{::section})}">
+<html lang="en" th:replace="~{user/base::Layout(~{::section})}" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="UTF-8" />
-<title>Home - Smart Contact Manager</title>
 </head>
 <body>
-<section style="height: 100vh;" class="">
-	<div id="container" class="container sign-in">
-		<!-- FORM SECTION -->
-		<div class="row">
-			<!-- DUMMY -->
-			<div class="col align-items-center flex-col sign-up">
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-up">
+	<section style="height: 100vh;">
+		<div id="container" class="container sign-in">
+			<!-- FORM SECTION -->
+			<div class="row">
+				<!-- DUMMY -->
+				<div class="col align-items-center flex-col sign-up">
+					<div class="form-wrapper align-items-center">
+						<div class="form sign-up">
+
+						</div>
+					</div>
+				</div>
+				<!-- END DUMMY -->
+				<!-- CONTACT -->
+				<div class="col align-items-center flex-col sign-in">
+					<div th:if=${session.message}>
+						<div th:classappend="${'alert-'+session.message.type}" class="alert alert-dismissible fade show text-center" role="alert">
+							<span th:text="${session.message.content}"></span>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+						<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
+					</div>
+					<div class="form-wrapper align-items-center">
+						<div class="form sign-in">
+							<form enctype="multipart/form-data" th:action="@{/user/processData}" method="POST" class="mt-2">
+								<div class="input-group">
+									<i class='bx bxs-user'></i>
+									<input type="text" id="firstName" name="name" placeholder="Name" required>
+								</div>
+								<div class="input-group">
+									<i class='bx bx-mail-send'></i>
+									<input type="email"  id="email" name="email" placeholder="Email" required>
+								</div>
+								<div class="input-group">
+									<i class='bx bx-phone'></i>
+									<input type="text" id="phone" name="phone" placeholder="Phone Number" required>
+								</div>
+								<div class="input-group">
+									<textarea style="width:100%;" placeholder="Description" name="description" id="mytextarea" rows="5"></textarea>
+								</div>
+								<div class="input-group custom-file">
+									<i class='bx bx-image-add'></i>
+									<input type="file" name="profileImage" />
+								</div>
+								<button type="submit">ADD</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- END CONTACT -->
+			</div>
+			<!-- CONTENT SECTION -->
+			<div class="row content-row">
+				<!-- CONTACT CONTENT -->
+				<div class="col align-items-center flex-col">
+					<div class="img sign-in">
+
+					</div>
+					<div class="text sign-in">
+						<h2>
+							ADD Contact
+						</h2>
+					</div>
+				</div>
+				<!-- END CONTACT CONTENT -->
+				<!-- DUMMY -->
+				<div class="col align-items-center flex-col">
+					<div class="text sign-up">
+
+					</div>
+					<div class="img sign-up">
 
 					</div>
 				</div>
+				<!-- END DUMMY -->
 			</div>
-			<!-- END DUMMY -->
-			<!-- CONTACT -->
-			<div class="col align-items-center flex-col sign-in">
-				<div th:if=${session.message}>
-					<div th:classappend="${'alert-'+session.message.type}" class="alert alert-dismissible fade show text-center" role="alert">
-						<span th:text="${session.message.content}"></span>
-						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>
-					<th:block th:text="${@sessionHelper.removeSessionAttribute()}"></th:block>
-				</div>
-				<div class="form-wrapper align-items-center">
-					<div class="form sign-in">
-						<form enctype="multipart/form-data" th:action="@{/user/processData}" method="POST" class="mt-2">
-							<div class="input-group">
-								<i class='bx bxs-user'></i>
-								<input type="text" id="firstName" name="name" placeholder="Name" required>
-							</div>
-							<div class="input-group">
-								<i class='bx bx-mail-send'></i>
-								<input type="email"  id="email" name="email" placeholder="Email" required>
-							</div>
-							<div class="input-group">
-								<i class='bx bx-phone'></i>
-								<input type="text" id="phone" name="phone" placeholder="Phone Number" required>
-							</div>
-							<div class="input-group">
-								<textarea style="width:100%;" placeholder="Description" name="description" id="mytextarea" rows="5"></textarea>
-							</div>
-							<div class="input-group custom-file">
-								<i class='bx bx-image-add'></i>
-								<input type="file" name="profileImage" />
-							</div>
-							<button type="submit">ADD</button>
-						</form>
-					</div>
-				</div>
-			</div>
-			<!-- END CONTACT -->
 		</div>
-		<!-- CONTENT SECTION -->
-		<div class="row content-row">
-			<!-- CONTACT CONTENT -->
-			<div class="col align-items-center flex-col">
-				<div class="img sign-in">
 
-				</div>
-				<div class="text sign-in">
-					<h2>
-						ADD Contact
-					</h2>
-				</div>
-			</div>
-			<!-- END CONTACT CONTENT -->
-			<!-- DUMMY -->
-			<div class="col align-items-center flex-col">
-				<div class="text sign-up">
+		<script>
+			$(document).ready(() =>{
+				$(".item").removeClass("active");
+				$("#addContact").addClass("active");
+			});
+		</script>
 
-				</div>
-				<div class="img sign-up">
-
-				</div>
-			</div>
-			<!-- END DUMMY -->
-		</div>
-	</div>
-
-	<script>
-		$(document).ready(() =>{
-			$(".item").removeClass("active");
-			$("#addContact").addClass("active");
-		});
-	</script>
-
-</section>
+	</section>
 </body>
 </html>

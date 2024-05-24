@@ -1,12 +1,12 @@
 server:
-  port: 8585
+#  port: 8080
   error:
     whitelabel:
       enabled: false
     path: /error
   servlet:
     session:
-      timeout: 5m
+      timeout: 2m
       cookie:
         http-only: true
         secure: true
@@ -14,6 +14,10 @@ spring:
   application:
     name: SCM
   datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/contactmanager
+#    username: root
+#    password: root
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://ep-black-snowflake-30567558.us-east-2.aws.neon.tech/ContactManager_DB
     username: gkalyankar33

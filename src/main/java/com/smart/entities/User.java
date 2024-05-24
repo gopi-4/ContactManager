@@ -19,7 +19,7 @@ import java.util.Objects;
 public class User {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue()
 	private Integer Id;
 	private String name;
 	@Email
@@ -38,8 +38,8 @@ public class User {
 	private boolean status;
 	@Enumerated(EnumType.STRING)
 	private AuthenticationProvider authProvider;
-	private int index;
-
+	private int position;
+	private boolean verified;
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.email);

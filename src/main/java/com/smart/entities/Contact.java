@@ -32,7 +32,7 @@ public class Contact {
 	private Integer userId;
 	private boolean status;
 	private boolean isRegister;
-	private int index;
+	private int position;
 
 	@Override
 	public int hashCode() {
